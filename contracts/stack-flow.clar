@@ -49,3 +49,4 @@
 (define-map user-tip-count principal uint)
 (define-map user-received-count principal uint)
 (define-map user-total-sent principal uint)
+(define-map user-total-received principal uint)
