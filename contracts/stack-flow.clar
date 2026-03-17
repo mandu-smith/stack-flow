@@ -38,3 +38,4 @@
  { tip-id: uint }
  {
         sender: principal,
+        amount: uint,
