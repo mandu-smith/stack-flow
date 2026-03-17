@@ -35,8 +35,12 @@
 
 ;; Stores all tips sent through StackFlow
 (define-map tips
- { tip-id: uint }
- {
+    { tip-id: uint }
+    {
         sender: principal,
+        recipient: principal,
         amount: uint,
-         message: (string-utf8 280),
+        message: (string-utf8 280),
+        tip-height: uint
+    }
+)
