@@ -109,3 +109,4 @@
         ;; Update global protocol statistics
         (var-set total-tips-sent (+ tip-id u1))
         (var-set total-volume (+ (var-get total-volume) amount))
+        (var-set platform-fees (+ (var-get platform-fees) fee))
