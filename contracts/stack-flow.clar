@@ -97,3 +97,8 @@
                 recipient: recipient,
                 amount: amount,
                 tip-height: stacks-block-height
+                 }
+        )
+        
+        ;; Update user statistics
+        (map-set user-total-sent tx-sender (+ sender-sent amount))
