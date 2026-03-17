@@ -146,3 +146,5 @@
 
 ;; Returns total amount a user has sent
 (define-read-only (get-user-sent-total (user principal))
+ (ok (default-to u0 (map-get? user-total-sent user)))
+)
