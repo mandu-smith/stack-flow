@@ -24,3 +24,7 @@
 ;; 0.5% fee = 50 basis points
 (define-constant fee-basis-points u50)
 (define-constant basis-points-divisor u10000)
+
+;; Data Variables
+;; Global statistics tracked by the StackFlow protocol
+(define-data-var total-tips-sent uint u0)
