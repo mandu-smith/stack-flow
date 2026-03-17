@@ -68,12 +68,16 @@
 ;; Allows a user to send a micro-tip to another user with an optional message.
 ;; A small platform fee is deducted and sent to the contract owner.
 (define-public (send-tip (recipient principal) (amount uint) (message (string-utf8 280)))
-(let
+    (let
         (
             (tip-id (var-get total-tips-sent))
-             (fee (calculate-fee amount))
-             (is-owner (is-eq tx-sender contract-owner))
-             (sender-sent (default-to u0 (map-get? user-total-sent tx-sender)))
-             (recipient-received (default-to u0 (map-get? user-total-received recipient)))
-              (sender-count (default-to u0 (map-get? user-tip-count tx-sender)))
-               (recipient-count (default-to u0 (map-get? user-received-count recipient)))
+            (fee (calculate-fee amount))
+            (is-owner (is-eq tx-sender contract-owner))
+            (net-amount (if is-owner amount (- amount fee)))
+            (sender-sent (default-to u0 (map-get? user-total-sent tx-sender)))
+            (recipient-received (default-to u0 (map-get? user-total-received recipient)))
+            (sender-count (default-to u0 (map-get? user-tip-count tx-sender)))
+            (recipient-count (default-to u0 (map-get? user-received-count recipient)))
+        )
+        ;; Validation checks
+        (asserts! (> amount u0) err-invalid-amount)
