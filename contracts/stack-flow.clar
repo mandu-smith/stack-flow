@@ -82,13 +82,13 @@
         ;; Validation checks
         (asserts! (> amount u0) err-invalid-amount)
         (asserts! (not (is-eq tx-sender recipient)) err-invalid-amount)
-
+        
         ;; Transfer STX to recipient
         (try! (stx-transfer? net-amount tx-sender recipient))
 
         ;; Transfer platform fee to contract owner (skip if sender is owner)
         (if is-owner true (try! (stx-transfer? fee tx-sender contract-owner)))
-
+        
         ;; Record the tip
         (map-set tips
             { tip-id: tip-id }
@@ -96,8 +96,9 @@
                 sender: tx-sender,
                 recipient: recipient,
                 amount: amount,
+                message: message,
                 tip-height: stacks-block-height
-                 }
+            }
         )
         
         ;; Update user statistics
@@ -105,12 +106,12 @@
         (map-set user-total-received recipient (+ recipient-received amount))
         (map-set user-tip-count tx-sender (+ sender-count u1))
         (map-set user-received-count recipient (+ recipient-count u1))
-
+        
         ;; Update global protocol statistics
         (var-set total-tips-sent (+ tip-id u1))
         (var-set total-volume (+ (var-get total-volume) amount))
         (var-set platform-fees (+ (var-get platform-fees) fee))
-
+        
         (ok tip-id)
     )
 )
