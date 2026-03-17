@@ -57,3 +57,5 @@
 
 ;; Calculates the platform fee based on the configured basis points
 (define-private (calculate-fee (amount uint))
+    (/ (* amount fee-basis-points) basis-points-divisor)
+)
