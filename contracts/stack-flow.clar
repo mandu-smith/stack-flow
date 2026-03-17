@@ -152,3 +152,5 @@
 ;; Returns total amount a user has received
 (define-read-only (get-user-received-total (user principal))
 (ok (default-to u0 (map-get? user-total-received user)))
+
+(define-read-only (get-fee-for-amount (amount uint))
