@@ -44,3 +44,6 @@
         tip-height: uint
     }
 )
+
+;; User activity statistics
+(define-map user-tip-count principal uint)
