@@ -28,3 +28,4 @@
 ;; Data Variables
 ;; Global statistics tracked by the StackFlow protocol
 (define-data-var total-tips-sent uint u0)
+(define-constant basis-points-divisor u10000)
