@@ -75,3 +75,4 @@
              (is-owner (is-eq tx-sender contract-owner))
              (sender-sent (default-to u0 (map-get? user-total-sent tx-sender)))
              (recipient-received (default-to u0 (map-get? user-total-received recipient)))
+              (sender-count (default-to u0 (map-get? user-tip-count tx-sender)))
