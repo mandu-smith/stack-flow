@@ -127,17 +127,17 @@
 
 ;; Returns tipping statistics for a specific user
 (define-read-only (get-user-stats (user principal))
-{
+    {
         tips-sent: (default-to u0 (map-get? user-tip-count user)),
         tips-received: (default-to u0 (map-get? user-received-count user)),
         total-sent: (default-to u0 (map-get? user-total-sent user)),
         total-received: (default-to u0 (map-get? user-total-received user))
-         }
+    }
 )
 
 ;; Returns overall StackFlow platform statistics
 (define-read-only (get-platform-stats)
-{
+    {
         total-tips: (var-get total-tips-sent),
         total-volume: (var-get total-volume),
         platform-fees: (var-get platform-fees)
@@ -146,11 +146,15 @@
 
 ;; Returns total amount a user has sent
 (define-read-only (get-user-sent-total (user principal))
- (ok (default-to u0 (map-get? user-total-sent user)))
+    (ok (default-to u0 (map-get? user-total-sent user)))
 )
 
 ;; Returns total amount a user has received
 (define-read-only (get-user-received-total (user principal))
-(ok (default-to u0 (map-get? user-total-received user)))
+    (ok (default-to u0 (map-get? user-total-received user)))
+)
 
+;; Utility function to calculate the fee for a given amount
 (define-read-only (get-fee-for-amount (amount uint))
+    (ok (calculate-fee amount))
+)
