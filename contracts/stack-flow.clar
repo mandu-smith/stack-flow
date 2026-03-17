@@ -124,3 +124,6 @@
 (define-read-only (get-tip (tip-id uint))
     (map-get? tips { tip-id: tip-id })
 )
+
+;; Returns tipping statistics for a specific user
+(define-read-only (get-user-stats (user principal))
