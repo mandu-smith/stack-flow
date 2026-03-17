@@ -91,3 +91,4 @@
 
         ;; Record the tip
         (map-set tips
+            { tip-id: tip-id }
