@@ -28,7 +28,7 @@ type CacheEntry<T> = {
 };
 
 const TIP_FEE_RATE = 0.005;
-const READ_ONLY_MAX_RETRIES = 3;
+const READ_ONLY_MAX_RETRIES = 5;
 const BASE_BACKOFF_MS = 1_000;
 const PLATFORM_STATS_TTL_MS = 30_000;
 const TIP_BY_ID_TTL_MS = 60_000;
@@ -159,11 +159,15 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
 async function mapWithConcurrency<T, R>(
   items: T[],
   concurrency: number,
-  mapper: (item: T) => Promise<R>
+  mapper: (item: T) => Promise<R>,
+  delayMs = 0
 ): Promise<R[]> {
   const results: R[] = [];
 
   for (let i = 0; i < items.length; i += concurrency) {
+    if (i > 0 && delayMs > 0) {
+      await sleep(delayMs);
+    }
     const chunk = items.slice(i, i + concurrency);
     const chunkResults = await Promise.all(chunk.map(mapper));
     results.push(...chunkResults);
@@ -437,7 +441,7 @@ export async function getAllTips(limit = 40): Promise<TipEntry[]> {
     const start = Math.max(0, end - limit);
     const ids = Array.from({ length: end - start }, (_, index) => start + index);
 
-    const tips = await mapWithConcurrency(ids, 3, (id) => getTipById(id));
+    const tips = await mapWithConcurrency(ids, 2, (id) => getTipById(id), 500);
 
     const result = tips
       .filter((tip): tip is TipEntry => tip !== null)
