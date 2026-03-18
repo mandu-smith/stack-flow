@@ -1,0 +1,237 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { TxStatus } from './TxStatus';
+import { Check, Loader2, MessageSquare, Send, AlertCircle } from 'lucide-react';
+import { useWallet } from '@/contexts/WalletContext';
+import { sendTip } from '@/lib/contract';
+
+type ComposerState = 'idle' | 'filling' | 'ready' | 'pending' | 'confirmed' | 'failed';
+
+export function TipComposer() {
+  const { isConnected } = useWallet();
+  const [state, setState] = useState<ComposerState>('idle');
+  const [recipient, setRecipient] = useState('');
+  const [amount, setAmount] = useState('');
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
+  const [txid, setTxid] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const parsedAmount = parseFloat(amount) || 0;
+  const fee = parsedAmount > 0 ? parseFloat((parsedAmount * 0.005).toFixed(4)) : 0;
+  const total = parsedAmount + fee;
+
+  const isValidAddress = recipient.startsWith('SP') && recipient.length > 30;
+  const isReady = isValidAddress && parsedAmount > 0 && isConnected;
+
+  const handleRecipientChange = (val: string) => {
+    setRecipient(val);
+    setError('');
+    if (val.length > 0 && state === 'idle') setState('filling');
+    if (val.length === 0 && !amount) setState('idle');
+  };
+
+  const handleSend = async () => {
+    if (!isReady) return;
+    
+    try {
+      setError('');
+      setState('pending');
+      setLoading(true);
+
+      const result = await sendTip(recipient, Math.floor(parsedAmount * 1e6), message);
+      
+      if (result?.txid) {
+        setTxid(result.txid);
+        setState('confirmed');
+      } else if (result?.cancel) {
+        setState('idle');
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to send tip';
+      setError(errorMsg);
+      setState('idle');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setState('idle');
+    setRecipient('');
+    setAmount('');
+    setMessage('');
+    setShowMessage(false);
+    setTxid('');
+    setError('');
+  };
+
+  if (state === 'confirmed' && txid) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center gap-4 rounded-lg bg-card p-6 shadow-base text-center"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
+          <Check className="h-6 w-6 text-success" />
+        </div>
+        <h3 className="font-display text-[length:var(--text-xl)] font-semibold">Tip sent!</h3>
+        <p className="text-[length:var(--text-sm)] text-muted-foreground">
+          {parsedAmount} STX sent successfully
+        </p>
+        <div className="w-full rounded-md bg-secondary px-3 py-2">
+          <span className="text-[length:var(--text-xs)] text-muted-foreground">Tx ID</span>
+          <p className="font-mono text-[length:var(--text-xs)] break-all text-foreground">{txid}</p>
+        </div>
+        <Button onClick={handleReset} variant="outline" className="mt-2">
+          Send another tip
+        </Button>
+      </motion.div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4 rounded-lg bg-card p-6 shadow-base">
+      <h2 className="font-display text-[length:var(--text-xl)] font-semibold text-foreground">
+        Send a tip
+      </h2>
+
+      {/* Error message */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-destructive"
+        >
+          <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <span className="text-[length:var(--text-sm)]">{error}</span>
+        </motion.div>
+      )}
+
+      {/* Recipient */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-[length:var(--text-sm)] font-medium text-foreground">Recipient</label>
+        <Input
+          placeholder="SPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          value={recipient}
+          onChange={e => handleRecipientChange(e.target.value)}
+          className="font-mono text-[length:var(--text-sm)]"
+          disabled={state === 'pending' || loading}
+        />
+      </div>
+
+      {/* Amount — appears after recipient has content */}
+      <AnimatePresence>
+        {(state !== 'idle' || recipient.length > 0) && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[length:var(--text-sm)] font-medium text-foreground">Amount (STX)</label>
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+                min="0"
+                step="0.01"
+                disabled={state === 'pending' || loading}
+              />
+              {parsedAmount > 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center justify-between text-[length:var(--text-xs)] text-muted-foreground"
+                >
+                  <span>Fee (0.5%): {fee} STX</span>
+                  <span className="font-medium text-foreground">Total: {total.toFixed(4)} STX</span>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Message toggle */}
+      <AnimatePresence>
+        {parsedAmount > 0 && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            {!showMessage ? (
+              <button
+                onClick={() => setShowMessage(true)}
+                className="flex items-center gap-1.5 text-[length:var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <MessageSquare className="h-3.5 w-3.5" />
+                Add a message (optional)
+              </button>
+            ) : (
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[length:var(--text-sm)] font-medium text-foreground">Message</label>
+                <Textarea
+                  placeholder="Say something nice…"
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  rows={2}
+                  maxLength={280}
+                  disabled={state === 'pending' || loading}
+                  className="resize-none text-[length:var(--text-sm)]"
+                />
+                <span className="text-[length:var(--text-xs)] text-muted-foreground text-right">
+                  {message.length}/280
+                </span>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Submit */}
+      <div className="flex flex-col gap-2 pt-1">
+        {!isConnected ? (
+          <Button disabled className="w-full gap-2">
+            Connect wallet to send
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSend}
+            disabled={!isReady || state === 'pending' || loading}
+            className="w-full gap-2"
+          >
+            {state === 'pending' || loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Sending…
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Send {parsedAmount > 0 ? `${total.toFixed(2)} STX` : 'tip'}
+              </>
+            )}
+          </Button>
+        )}
+
+        {state === 'pending' && (
+          <div className="flex justify-center">
+            <TxStatus status="pending" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

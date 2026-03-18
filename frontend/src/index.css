@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: 'Fraunces', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Fluid type scale */
+    --text-xs: clamp(0.7rem, 0.66rem + 0.2vw, 0.78rem);
+    --text-sm: clamp(0.8rem, 0.74rem + 0.3vw, 0.875rem);
+    --text-base: clamp(0.9rem, 0.84rem + 0.3vw, 1rem);
+    --text-lg: clamp(1.05rem, 0.96rem + 0.45vw, 1.175rem);
+    --text-xl: clamp(1.2rem, 1.06rem + 0.7vw, 1.5rem);
+    --text-2xl: clamp(1.5rem, 1.26rem + 1.2vw, 2rem);
+    --text-3xl: clamp(1.8rem, 1.4rem + 2vw, 2.75rem);
+    --text-4xl: clamp(2.2rem, 1.6rem + 3vw, 3.75rem);
+    --text-5xl: clamp(2.8rem, 1.8rem + 5vw, 5rem);
+
+    /* Fluid spacing */
+    --space-tight: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+    --space-base: clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem);
+    --space-wide: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+    --space-section: clamp(3rem, 2rem + 5vw, 6rem);
+
+    /* Warm amber light theme */
+    --background: 40 33% 97%;
+    --foreground: 30 10% 12%;
+
+    --card: 40 30% 99%;
+    --card-foreground: 30 10% 12%;
+
+    --popover: 40 30% 99%;
+    --popover-foreground: 30 10% 12%;
+
+    --primary: 36 85% 52%;
+    --primary-foreground: 36 20% 8%;
+
+    --secondary: 40 20% 92%;
+    --secondary-foreground: 30 10% 20%;
+
+    --muted: 40 15% 93%;
+    --muted-foreground: 30 8% 46%;
+
+    --accent: 174 60% 36%;
+    --accent-foreground: 174 80% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 36 20% 88%;
+    --input: 36 20% 88%;
+    --ring: 36 85% 52%;
+
+    --radius: 0.625rem;
+
+    /* Status */
+    --success: 152 60% 40%;
+    --pending: 36 85% 52%;
+    --failed: 0 72% 51%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(30 10% 12% / 0.04);
+    --shadow-base: 0 2px 8px -2px hsl(30 10% 12% / 0.08), 0 1px 2px -1px hsl(30 10% 12% / 0.04);
+    --shadow-lg: 0 8px 24px -6px hsl(30 10% 12% / 0.1), 0 2px 8px -2px hsl(30 10% 12% / 0.06);
+    --shadow-glow: 0 0 20px -4px hsl(36 85% 52% / 0.25);
+
+    --sidebar-background: 40 25% 96%;
+    --sidebar-foreground: 30 10% 20%;
+    --sidebar-primary: 36 85% 52%;
+    --sidebar-primary-foreground: 36 20% 8%;
+    --sidebar-accent: 40 20% 92%;
+    --sidebar-accent-foreground: 30 10% 20%;
+    --sidebar-border: 36 20% 88%;
+    --sidebar-ring: 36 85% 52%;
+  }
+
+  .dark {
+    --background: 30 12% 8%;
+    --foreground: 40 20% 92%;
+
+    --card: 30 10% 11%;
+    --card-foreground: 40 20% 92%;
+
+    --popover: 30 10% 11%;
+    --popover-foreground: 40 20% 92%;
+
+    --primary: 36 85% 55%;
+    --primary-foreground: 36 20% 6%;
+
+    --secondary: 30 10% 16%;
+    --secondary-foreground: 40 20% 85%;
+
+    --muted: 30 8% 18%;
+    --muted-foreground: 30 10% 55%;
+
+    --accent: 174 55% 42%;
+    --accent-foreground: 174 10% 6%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 8% 18%;
+    --input: 30 8% 20%;
+    --ring: 36 85% 55%;
+
+    --success: 152 55% 45%;
+    --pending: 36 85% 55%;
+    --failed: 0 62% 45%;
+
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.2);
+    --shadow-base: 0 2px 8px -2px hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.2);
+    --shadow-lg: 0 8px 24px -6px hsl(0 0% 0% / 0.4), 0 2px 8px -2px hsl(0 0% 0% / 0.25);
+    --shadow-glow: 0 0 24px -4px hsl(36 85% 55% / 0.2);
+
+    --sidebar-background: 30 10% 10%;
+    --sidebar-foreground: 40 20% 85%;
+    --sidebar-primary: 36 85% 55%;
+    --sidebar-primary-foreground: 36 20% 6%;
+    --sidebar-accent: 30 8% 16%;
+    --sidebar-accent-foreground: 40 20% 85%;
+    --sidebar-border: 30 8% 18%;
+    --sidebar-ring: 36 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Easing curves */
+@layer utilities {
+  .ease-out-quint {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ease-in-quart {
+    transition-timing-function: cubic-bezier(0.5, 0, 0.75, 0.0);
+  }
+}
+
+/* Odometer digit animation */
+@keyframes odometer-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.animate-odometer {
+  animation: odometer-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Grid expand */
+@keyframes grid-expand {
+  from { grid-template-rows: 0fr; }
+  to   { grid-template-rows: 1fr; }
+}
+
+.animate-grid-expand {
+  animation: grid-expand 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
