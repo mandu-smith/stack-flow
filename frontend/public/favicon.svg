@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">StackFlow Favicon</title>
+  <desc id="desc">A professional SF-style flow mark on a rounded square.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E1A2B" />
+      <stop offset="1" stop-color="#1E385C" />
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7C85F" />
+      <stop offset="1" stop-color="#E8A62B" />
+    </linearGradient>
+  </defs>
+
+  <rect x="4" y="4" width="56" height="56" rx="13" fill="url(#bg)" />
+
+  <path
+    d="M17 24c0-4.4 3.6-8 8-8h22v8H25v4h14c4.4 0 8 3.6 8 8s-3.6 8-8 8H17v-8h22v-4H25c-4.4 0-8-3.6-8-8z"
+    fill="#F5F8FF"
+  />
+
+  <circle cx="46" cy="18" r="4" fill="url(#flow)" />
+  <circle cx="18" cy="46" r="3" fill="url(#flow)" opacity="0.92" />
+</svg>
