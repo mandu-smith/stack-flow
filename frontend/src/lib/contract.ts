@@ -344,6 +344,12 @@ export async function getPlatformStats(): Promise<{
     return result;
   } catch (error) {
     console.error('Error getting platform stats:', error);
+
+    // Degrade gracefully on persistent rate-limit failures.
+    if (platformStatsCache) {
+      return platformStatsCache.value;
+    }
+
     throw error;
   } finally {
     platformStatsInFlight = null;
@@ -386,7 +392,7 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
     const blockHeight = asNumber(tipTuple['tip-height']);
     const timestamp = await fetchBlockTimestamp(blockHeight);
 
-    const tip = {
+    const tip: TipEntry = {
       id: String(tipId),
       txid: `onchain-tip-${tipId}`,
       sender: asString(tipTuple.sender),
@@ -445,6 +451,11 @@ export async function getAllTips(limit = 40): Promise<TipEntry[]> {
     return result;
   } catch (error) {
     console.error('Error getting all tips:', error);
+
+    if (cached) {
+      return cached.value;
+    }
+
     return [];
   } finally {
     allTipsInFlight.delete(limit);
