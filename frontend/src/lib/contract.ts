@@ -14,8 +14,103 @@ type TransactionResult = {
   cancel?: () => void;
 };
 
+type PlatformStats = {
+  totalTips: number;
+  totalVolumeMicro: number;
+  totalFeesMicro: number;
+  totalVolumeSTX: number;
+  totalFeesSTX: number;
+};
+
+type CacheEntry<T> = {
+  value: T;
+  expiresAt: number;
+};
+
 const TIP_FEE_RATE = 0.005;
+const READ_ONLY_MAX_RETRIES = 3;
+const BASE_BACKOFF_MS = 1_000;
+const PLATFORM_STATS_TTL_MS = 30_000;
+const TIP_BY_ID_TTL_MS = 60_000;
+const ALL_TIPS_TTL_MS = 20_000;
 const blockTimestampCache = new Map<number, Date>();
+const tipByIdCache = new Map<number, CacheEntry<TipEntry | null>>();
+const allTipsCache = new Map<number, CacheEntry<TipEntry[]>>();
+const allTipsInFlight = new Map<number, Promise<TipEntry[]>>();
+let platformStatsCache: CacheEntry<PlatformStats> | null = null;
+let platformStatsInFlight: Promise<PlatformStats> | null = null;
+
+function now(): number {
+  return Date.now();
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function toErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error ?? '');
+}
+
+function isRateLimitedError(error: unknown): boolean {
+  const message = toErrorMessage(error);
+  return message.includes('429') || /too many requests/i.test(message) || /rate limit/i.test(message);
+}
+
+function parseRetryAfterMs(error: unknown): number | null {
+  const message = toErrorMessage(error);
+
+  // Hiro responses often contain: "Please try again in 23 seconds"
+  const secondsMatch = message.match(/try again in\s+(\d+)\s+seconds?/i);
+  if (secondsMatch) {
+    const seconds = Number(secondsMatch[1]);
+    if (Number.isFinite(seconds) && seconds > 0) {
+      return seconds * 1_000;
+    }
+  }
+
+  return null;
+}
+
+function getBackoffMs(attempt: number, error: unknown): number {
+  const fromProvider = parseRetryAfterMs(error);
+  const jitter = Math.floor(Math.random() * 400);
+
+  if (fromProvider !== null) {
+    return fromProvider + jitter;
+  }
+
+  return BASE_BACKOFF_MS * Math.pow(2, attempt) + jitter;
+}
+
+function getCached<T>(entry: CacheEntry<T> | null): T | null {
+  if (!entry) return null;
+  if (entry.expiresAt <= now()) return null;
+  return entry.value;
+}
+
+async function callReadOnlyWithRetry(
+  args: Parameters<typeof fetchCallReadOnlyFunction>[0]
+) {
+  let lastError: unknown = null;
+
+  for (let attempt = 0; attempt <= READ_ONLY_MAX_RETRIES; attempt += 1) {
+    try {
+      return await fetchCallReadOnlyFunction(args);
+    } catch (error) {
+      lastError = error;
+
+      if (!isRateLimitedError(error) || attempt === READ_ONLY_MAX_RETRIES) {
+        throw error;
+      }
+
+      await sleep(getBackoffMs(attempt, error));
+    }
+  }
+
+  throw lastError;
+}
 
 function asNumber(value: unknown): number {
   if (value && typeof value === 'object' && 'value' in value) {
@@ -177,7 +272,7 @@ export async function getUserTipStats(userAddress: string): Promise<{
   tipsReceived: number;
 }> {
   try {
-    const cv = await fetchCallReadOnlyFunction({
+    const cv = await callReadOnlyWithRetry({
       contractAddress: CONTRACT_ADDRESS,
       contractName: CONTRACT_NAME,
       functionName: 'get-user-stats',
@@ -209,8 +304,16 @@ export async function getPlatformStats(): Promise<{
   totalVolumeSTX: number;
   totalFeesSTX: number;
 }> {
+  const cached = getCached(platformStatsCache);
+  if (cached) return cached;
+
+  if (platformStatsInFlight) {
+    return platformStatsInFlight;
+  }
+
+  platformStatsInFlight = (async () => {
   try {
-    const cv = await fetchCallReadOnlyFunction({
+    const cv = await callReadOnlyWithRetry({
       contractAddress: CONTRACT_ADDRESS,
       contractName: CONTRACT_NAME,
       functionName: 'get-platform-stats',
@@ -225,22 +328,39 @@ export async function getPlatformStats(): Promise<{
     const totalVolumeMicro = Number(value['total-volume']?.value ?? 0);
     const totalFeesMicro = Number(value['platform-fees']?.value ?? 0);
 
-    return {
+    const result = {
       totalTips: Number(value['total-tips']?.value ?? 0),
       totalVolumeMicro,
       totalFeesMicro,
       totalVolumeSTX: totalVolumeMicro / 1_000_000,
       totalFeesSTX: totalFeesMicro / 1_000_000,
     };
+
+    platformStatsCache = {
+      value: result,
+      expiresAt: now() + PLATFORM_STATS_TTL_MS,
+    };
+
+    return result;
   } catch (error) {
     console.error('Error getting platform stats:', error);
     throw error;
+  } finally {
+    platformStatsInFlight = null;
   }
+  })();
+
+  return platformStatsInFlight;
 }
 
 export async function getTipById(tipId: number): Promise<TipEntry | null> {
+  const cached = tipByIdCache.get(tipId);
+  if (cached && cached.expiresAt > now()) {
+    return cached.value;
+  }
+
   try {
-    const cv = await fetchCallReadOnlyFunction({
+    const cv = await callReadOnlyWithRetry({
       contractAddress: CONTRACT_ADDRESS,
       contractName: CONTRACT_NAME,
       functionName: 'get-tip',
@@ -253,6 +373,10 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
     const tipTuple = unwrapOptionalTuple(parsed?.value);
 
     if (!tipTuple) {
+      tipByIdCache.set(tipId, {
+        value: null,
+        expiresAt: now() + TIP_BY_ID_TTL_MS,
+      });
       return null;
     }
 
@@ -262,7 +386,7 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
     const blockHeight = asNumber(tipTuple['tip-height']);
     const timestamp = await fetchBlockTimestamp(blockHeight);
 
-    return {
+    const tip = {
       id: String(tipId),
       txid: `onchain-tip-${tipId}`,
       sender: asString(tipTuple.sender),
@@ -274,6 +398,13 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
       status: 'confirmed',
       blockHeight,
     };
+
+    tipByIdCache.set(tipId, {
+      value: tip,
+      expiresAt: now() + TIP_BY_ID_TTL_MS,
+    });
+
+    return tip;
   } catch (error) {
     console.error(`Error getting tip by id ${tipId}:`, error);
     return null;
@@ -281,6 +412,17 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
 }
 
 export async function getAllTips(limit = 40): Promise<TipEntry[]> {
+  const cached = allTipsCache.get(limit);
+  if (cached && cached.expiresAt > now()) {
+    return cached.value;
+  }
+
+  const inFlight = allTipsInFlight.get(limit);
+  if (inFlight) {
+    return inFlight;
+  }
+
+  const loadPromise = (async () => {
   try {
     const stats = await getPlatformStats();
     if (stats.totalTips === 0) return [];
@@ -289,15 +431,28 @@ export async function getAllTips(limit = 40): Promise<TipEntry[]> {
     const start = Math.max(0, end - limit);
     const ids = Array.from({ length: end - start }, (_, index) => start + index);
 
-    const tips = await mapWithConcurrency(ids, 5, (id) => getTipById(id));
+    const tips = await mapWithConcurrency(ids, 3, (id) => getTipById(id));
 
-    return tips
+    const result = tips
       .filter((tip): tip is TipEntry => tip !== null)
       .sort((a, b) => Number(b.id) - Number(a.id));
+
+    allTipsCache.set(limit, {
+      value: result,
+      expiresAt: now() + ALL_TIPS_TTL_MS,
+    });
+
+    return result;
   } catch (error) {
     console.error('Error getting all tips:', error);
     return [];
+  } finally {
+    allTipsInFlight.delete(limit);
   }
+  })();
+
+  allTipsInFlight.set(limit, loadPromise);
+  return loadPromise;
 }
 
 export async function getTipsForAddress(address: string): Promise<{
