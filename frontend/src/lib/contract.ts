@@ -1,5 +1,6 @@
 import { request } from '@stacks/connect';
-import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
+import { Cl, Pc, ClarityType, fetchCallReadOnlyFunction, cvToJSON, cvToValue } from '@stacks/transactions';
+import type { ClarityValue } from '@stacks/transactions';
 import {
   CONTRACT_ADDRESS,
   CONTRACT_NAME,
@@ -240,14 +241,37 @@ function buildLeaderboard(entries: TipEntry[]) {
 }
 
 /**
- * Send a tip through the stack-flow contract
+ * Unwrap a read-only ClarityValue response, checking for ok/err types.
+ * Returns the inner value on success, throws on err responses.
+ */
+function unwrapResponse(cv: ClarityValue): ClarityValue {
+  if (cv.type === ClarityType.ResponseOk) {
+    return cv.value;
+  }
+  if (cv.type === ClarityType.ResponseErr) {
+    const errDetail = cvToValue(cv.value, true);
+    throw new Error(`Contract returned an error: ${errDetail}`);
+  }
+  // Not a response type (plain tuple, uint, etc.) — return as-is
+  return cv;
+}
+
+/**
+ * Send a tip through the stack-flow contract.
+ * Uses explicit post conditions with `deny` mode for user safety.
  */
 export async function sendTip(
+  senderAddress: string,
   recipient: string,
   amount: number,
   message: string = ''
 ): Promise<TransactionResult> {
   try {
+    // Post condition: sender will send at most `amount` microSTX
+    const postCondition = Pc.principal(senderAddress)
+      .willSendLte(amount)
+      .ustx();
+
     const result = await request('stx_callContract', {
       contract: `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
       functionName: 'send-tip',
@@ -257,7 +281,8 @@ export async function sendTip(
         Cl.stringUtf8(message),
       ],
       network: networkName,
-      postConditionMode: 'allow',
+      postConditions: [postCondition],
+      postConditionMode: 'deny',
       sponsored: false,
     });
 
@@ -285,7 +310,8 @@ export async function getUserTipStats(userAddress: string): Promise<{
       network: stacksNetwork,
     });
 
-    const parsed = cvToJSON(cv);
+    const unwrapped = unwrapResponse(cv);
+    const parsed = cvToJSON(unwrapped);
     const value = parsed?.value ?? {};
 
     return {
@@ -326,7 +352,8 @@ export async function getPlatformStats(): Promise<{
       network: stacksNetwork,
     });
 
-    const parsed = cvToJSON(cv);
+    const unwrapped = unwrapResponse(cv);
+    const parsed = cvToJSON(unwrapped);
     const value = parsed?.value ?? {};
 
     const totalVolumeMicro = Number(value['total-volume']?.value ?? 0);
@@ -379,7 +406,8 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
       network: stacksNetwork,
     });
 
-    const parsed = cvToJSON(cv);
+    const unwrapped = unwrapResponse(cv);
+    const parsed = cvToJSON(unwrapped);
     const tipTuple = unwrapOptionalTuple(parsed?.value);
 
     if (!tipTuple) {
