@@ -1,0 +1,18 @@
+---
+id: 0
+name: Mainnet deployment
+network: mainnet
+stacks-node: "https://api.hiro.so"
+bitcoin-node: "http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: stack-flow-v1
+            expected-sender: SP17XF1J869JJZ32YG0S3QRJAJZVY5X2B95M0EZNA
+            cost: 56450
+            path: contracts/stack-flow.clar
+            anchor-block-only: true
+            clarity-version: 4
+      epoch: "3.3"
