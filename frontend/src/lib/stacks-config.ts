@@ -23,6 +23,9 @@ export const stacksApiBaseUrl = import.meta.env.DEV
     : '/stacks-testnet'
   : remoteApiOrigin;
 
+// Network object for read-only calls — accepts baseUrl via client config.
+// The docs allow passing a URL string for `network`, but createNetwork
+// lets us proxy through Vite in dev without leaking the proxy prefix.
 export const stacksNetwork = createNetwork({
   network: networkName,
   client: {
