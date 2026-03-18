@@ -11,7 +11,7 @@ import { sendTip } from '@/lib/contract';
 type ComposerState = 'idle' | 'filling' | 'ready' | 'pending' | 'confirmed' | 'failed';
 
 export function TipComposer() {
-  const { isConnected } = useWallet();
+  const { isConnected, walletAddress } = useWallet();
   const [state, setState] = useState<ComposerState>('idle');
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
@@ -36,14 +36,14 @@ export function TipComposer() {
   };
 
   const handleSend = async () => {
-    if (!isReady) return;
+    if (!isReady || !walletAddress) return;
     
     try {
       setError('');
       setState('pending');
       setLoading(true);
 
-      const result = await sendTip(recipient, Math.floor(parsedAmount * 1e6), message);
+      const result = await sendTip(walletAddress, recipient, Math.floor(parsedAmount * 1e6), message);
       
       if (result?.txid) {
         setTxid(result.txid);
