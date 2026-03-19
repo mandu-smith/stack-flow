@@ -243,7 +243,11 @@ function parseReprPrincipal(repr: string): string {
 
 function parseReprString(repr: string): string {
   const match = repr.match(/^u"(.*)"$/s);
-  return match ? match[1] : repr;
+  if (!match) return repr;
+  // Clarity repr uses \u{XXXX} for unicode code points — convert to real characters
+  return match[1].replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) =>
+    String.fromCodePoint(parseInt(hex, 16))
+  );
 }
 
 function parseTipIdFromResult(repr: string): number | null {
