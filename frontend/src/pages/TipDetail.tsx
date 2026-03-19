@@ -10,6 +10,7 @@ import { StatusTimeline } from '@/components/StatusTimeline';
 import { Button } from '@/components/ui/button';
 import type { TipEntry } from '@/lib/types';
 import { getTipById } from '@/lib/contract';
+import { explorerTxUrl } from '@/lib/stacks-config';
 
 export default function TipDetail() {
   const { id } = useParams<{ id: string }>();
@@ -92,7 +93,14 @@ export default function TipDetail() {
 
           <div className="flex items-center gap-2">
             <span className="text-[length:var(--text-xs)] text-muted-foreground w-20 shrink-0">Txid</span>
-            <code className="font-mono text-[length:var(--text-xs)] text-foreground">{truncatedTxid}</code>
+            <a
+              href={explorerTxUrl(tip.txid)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[length:var(--text-xs)] text-primary hover:underline"
+            >
+              {truncatedTxid}
+            </a>
             <button onClick={handleCopyTxid} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Copy transaction ID">
               {copiedTxid ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
