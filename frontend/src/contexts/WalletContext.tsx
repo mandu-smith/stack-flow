@@ -90,7 +90,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsConnected(false);
       setWalletAddress(null);
       setDisplayName(null);
-      setWalletInfo(null);
       
       // Clear session storage
       sessionStorage.removeItem('stacks-wallet-session');
