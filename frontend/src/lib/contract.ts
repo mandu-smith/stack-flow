@@ -157,26 +157,6 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
   return null;
 }
 
-async function mapWithConcurrency<T, R>(
-  items: T[],
-  concurrency: number,
-  mapper: (item: T) => Promise<R>,
-  delayMs = 0
-): Promise<R[]> {
-  const results: R[] = [];
-
-  for (let i = 0; i < items.length; i += concurrency) {
-    if (i > 0 && delayMs > 0) {
-      await sleep(delayMs);
-    }
-    const chunk = items.slice(i, i + concurrency);
-    const chunkResults = await Promise.all(chunk.map(mapper));
-    results.push(...chunkResults);
-  }
-
-  return results;
-}
-
 async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
   const cached = blockTimestampCache.get(blockHeight);
   if (cached) return cached;
