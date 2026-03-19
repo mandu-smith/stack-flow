@@ -7,6 +7,8 @@ import { TxStatus } from './TxStatus';
 import { Check, Loader as Loader2, MessageSquare, Send, CircleAlert as AlertCircle } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
 import { sendTip } from '@/lib/contract';
+import { validateStacksAddress } from '@stacks/transactions';
+import { isMainnet } from '@/lib/stacks-config';
 
 type ComposerState = 'idle' | 'filling' | 'ready' | 'pending' | 'confirmed' | 'failed';
 
@@ -25,14 +27,19 @@ export function TipComposer() {
   const fee = parsedAmount > 0 ? parseFloat((parsedAmount * 0.005).toFixed(4)) : 0;
   const total = parsedAmount + fee;
 
-  const isValidAddress = recipient.startsWith('SP') && recipient.length > 30;
+  // Validate using @stacks/transactions validateStacksAddress and check correct network prefix
+  const expectedPrefix = isMainnet ? 'SP' : 'ST';
+  const isValidAddress =
+    recipient.startsWith(expectedPrefix) && validateStacksAddress(recipient);
+  const isSelfTip = walletAddress ? recipient === walletAddress : false;
   const isAmountValid = parsedAmount > 0 && parsedAmount <= 999999999;
-  const isReady = isValidAddress && isAmountValid && isConnected;
+  const isReady = isValidAddress && !isSelfTip && isAmountValid && isConnected;
 
   const getAddressError = () => {
     if (!recipient) return '';
-    if (!recipient.startsWith('SP')) return 'Address must start with SP';
-    if (recipient.length < 34) return 'Address is too short';
+    if (!recipient.startsWith(expectedPrefix)) return `Address must start with ${expectedPrefix}`;
+    if (!validateStacksAddress(recipient)) return 'Invalid Stacks address';
+    if (isSelfTip) return 'You cannot tip yourself';
     return '';
   };
 
@@ -138,7 +145,7 @@ export function TipComposer() {
         </label>
         <Input
           id="recipient-input"
-          placeholder="SPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          placeholder={`${expectedPrefix}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
           value={recipient}
           onChange={e => handleRecipientChange(e.target.value)}
           className={`font-mono text-[length:var(--text-sm)] ${
