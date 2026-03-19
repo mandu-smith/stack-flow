@@ -39,8 +39,8 @@ export const CONTRACT_NAME = CONTRACT_NAME_VALUE;
 
 // API endpoints
 export const explorerUrl = isMainnet 
-  ? 'https://explorer.stacks.co'
-  : 'https://explorer.stacks.co/?testnet=1';
+  ? 'https://explorer.hiro.so'
+  : 'https://explorer.hiro.so/?chain=testnet';
 
 type DetectedNetwork = 'mainnet' | 'testnet' | 'unknown';
 
