@@ -42,6 +42,20 @@ export const explorerUrl = isMainnet
   ? 'https://explorer.hiro.so'
   : 'https://explorer.hiro.so/?chain=testnet';
 
+/** Build a link to view a transaction in the Hiro explorer */
+export function explorerTxUrl(txId: string): string {
+  const base = 'https://explorer.hiro.so';
+  const chain = isMainnet ? '' : '&chain=testnet';
+  return `${base}/txid/${txId}?${chain}`;
+}
+
+/** Build a link to view an address in the Hiro explorer */
+export function explorerAddressUrl(address: string): string {
+  const base = 'https://explorer.hiro.so';
+  const chain = isMainnet ? '' : '&chain=testnet';
+  return `${base}/address/${address}?${chain}`;
+}
+
 type DetectedNetwork = 'mainnet' | 'testnet' | 'unknown';
 
 function toNumberOrNaN(value: unknown): number {
