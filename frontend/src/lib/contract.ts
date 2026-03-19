@@ -244,10 +244,16 @@ function parseReprPrincipal(repr: string): string {
 function parseReprString(repr: string): string {
   const match = repr.match(/^u"(.*)"$/s);
   if (!match) return repr;
-  // Clarity repr uses \u{XXXX} for unicode code points — convert to real characters
-  return match[1].replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) =>
-    String.fromCodePoint(parseInt(hex, 16))
-  );
+  // Clarity repr uses \u{XXYYZZ} where the hex digits are UTF-8 bytes, not
+  // Unicode code points. Decode each escape by converting the hex pairs into
+  // a byte array and then decoding as UTF-8.
+  return match[1].replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex: string) => {
+    const bytes: number[] = [];
+    for (let i = 0; i < hex.length; i += 2) {
+      bytes.push(parseInt(hex.slice(i, i + 2), 16));
+    }
+    return new TextDecoder().decode(new Uint8Array(bytes));
+  });
 }
 
 function parseTipIdFromResult(repr: string): number | null {
