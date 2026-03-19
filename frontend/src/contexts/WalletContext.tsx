@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { connect, disconnect, isConnected, request } from '@stacks/connect';
+import { connect, disconnect, isConnected, getLocalStorage } from '@stacks/connect';
 import { networkName, isMainnet } from '@/lib/stacks-config';
 
 interface WalletContextType {
@@ -21,16 +21,13 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 function extractStxAddress(
   addresses: { symbol?: string; address: string }[]
 ): string | null {
-  // Prefer matching by symbol
   const stxEntry = addresses.find((a) => a.symbol === 'STX');
   if (stxEntry) return stxEntry.address;
 
-  // Fallback: find by Stacks address prefix
   const stxPrefix = isMainnet ? 'SP' : 'ST';
   const byPrefix = addresses.find((a) => a.address.startsWith(stxPrefix));
   if (byPrefix) return byPrefix.address;
 
-  // Last resort: index 2 per Stacks docs ordering
   if (addresses.length > 2) return addresses[2].address;
 
   return null;
@@ -46,29 +43,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Restore wallet state on mount using @stacks/connect's built-in localStorage
+  // Restore wallet state on mount from localStorage — no wallet popup.
+  // getLocalStorage() reads cached addresses that @stacks/connect persists
+  // after a successful connect(). Shape: { addresses: { stx: [...], btc: [...] } }
   useEffect(() => {
-    const restoreSession = async () => {
-      try {
-        if (!isConnected()) return;
+    if (!isConnected()) return;
 
-        // Wallet was previously connected — request cached STX addresses
-        const result = await request('stx_getAddresses', {
-          network: networkName,
-        });
-
-        const address = result.addresses[0]?.address ?? null;
-        if (address) {
-          setIsConnected(true);
-          setWalletAddress(address);
-          setDisplayName(formatDisplayAddress(address));
-        }
-      } catch (error) {
-        // Silently fail wallet connection check on mount
-      }
-    };
-
-    restoreSession();
+    const stored = getLocalStorage();
+    const stxAddresses = stored?.addresses?.stx;
+    if (stxAddresses && stxAddresses.length > 0) {
+      const address = stxAddresses[0].address;
+      setIsConnected(true);
+      setWalletAddress(address);
+      setDisplayName(formatDisplayAddress(address));
+    }
   }, []);
 
   const connectWallet = async () => {
