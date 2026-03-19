@@ -31,9 +31,9 @@ type CacheEntry<T> = {
 const TIP_FEE_RATE = 0.005;
 const READ_ONLY_MAX_RETRIES = 5;
 const BASE_BACKOFF_MS = 1_000;
-const PLATFORM_STATS_TTL_MS = 30_000;
-const TIP_BY_ID_TTL_MS = 60_000;
-const ALL_TIPS_TTL_MS = 20_000;
+const PLATFORM_STATS_TTL_MS = 60_000;
+const TIP_BY_ID_TTL_MS = 120_000;
+const ALL_TIPS_TTL_MS = 60_000;
 const blockTimestampCache = new Map<number, Date>();
 const tipByIdCache = new Map<number, CacheEntry<TipEntry | null>>();
 const allTipsCache = new Map<number, CacheEntry<TipEntry[]>>();
@@ -181,30 +181,165 @@ async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
   const cached = blockTimestampCache.get(blockHeight);
   if (cached) return cached;
 
-  try {
-    const response = await fetch(`${stacksApiBaseUrl}/extended/v2/blocks/${blockHeight}`);
-    if (!response.ok) return new Date();
+  for (let attempt = 0; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch(`${stacksApiBaseUrl}/extended/v2/blocks/${blockHeight}`);
+      if (response.status === 429) {
+        await sleep(getBackoffMs(attempt, null));
+        continue;
+      }
+      if (!response.ok) return new Date();
 
-    const data = (await response.json()) as {
-      block_time_iso?: string;
-      block_time?: number;
-      burn_block_time_iso?: string;
-      burn_block_time?: number;
-    };
+      const data = (await response.json()) as {
+        block_time_iso?: string;
+        block_time?: number;
+        burn_block_time_iso?: string;
+        burn_block_time?: number;
+      };
 
-    const date = data.block_time_iso
-      ? new Date(data.block_time_iso)
-      : data.block_time
-        ? new Date(data.block_time * 1000)
-        : data.burn_block_time_iso
-          ? new Date(data.burn_block_time_iso)
-          : new Date((data.burn_block_time ?? 0) * 1000);
+      const date = data.block_time_iso
+        ? new Date(data.block_time_iso)
+        : data.block_time
+          ? new Date(data.block_time * 1000)
+          : data.burn_block_time_iso
+            ? new Date(data.burn_block_time_iso)
+            : new Date((data.burn_block_time ?? 0) * 1000);
 
-    blockTimestampCache.set(blockHeight, date);
-    return date;
-  } catch {
-    return new Date();
+      blockTimestampCache.set(blockHeight, date);
+      return date;
+    } catch {
+      if (attempt < 2) await sleep(getBackoffMs(attempt, null));
+    }
   }
+  return new Date();
+}
+
+// ---------------------------------------------------------------------------
+// Hiro Extended API — batch-fetch tips via transaction listing
+// ---------------------------------------------------------------------------
+// Instead of calling get-tip N times + fetchBlockTimestamp N times,
+// we fetch contract transactions in one paginated API call. Each tx
+// already contains sender_address, function_args, block_height,
+// block_time, and tx_result — everything we need.
+
+interface HiroContractCallArg {
+  name: string;
+  type: string;
+  repr: string;
+}
+
+interface HiroTxResponse {
+  tx_id: string;
+  tx_status: string;
+  tx_type: string;
+  block_height: number;
+  block_time: number;
+  sender_address: string;
+  contract_call?: {
+    contract_id: string;
+    function_name: string;
+    function_args: HiroContractCallArg[];
+  };
+  tx_result?: {
+    repr: string;
+  };
+}
+
+interface HiroTxListResponse {
+  limit: number;
+  offset: number;
+  total: number;
+  results: HiroTxResponse[];
+}
+
+function parseReprUint(repr: string): number {
+  const match = repr.match(/^u(\d+)$/);
+  return match ? Number(match[1]) : 0;
+}
+
+function parseReprPrincipal(repr: string): string {
+  return repr.replace(/^'/, '');
+}
+
+function parseReprString(repr: string): string {
+  const match = repr.match(/^u"(.*)"$/s);
+  return match ? match[1] : repr;
+}
+
+function parseTipIdFromResult(repr: string): number | null {
+  const match = repr.match(/\(ok\s+u(\d+)\)/);
+  return match ? Number(match[1]) : null;
+}
+
+/**
+ * Fetch tips by querying the Hiro extended API for contract-call
+ * transactions to the stack-flow contract. Returns up to `limit` tips
+ * using 1–3 paginated requests instead of N individual read-only calls.
+ */
+async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
+  const contractPrincipal = `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`;
+  const tips: TipEntry[] = [];
+  let offset = 0;
+  const pageSize = 50;
+
+  while (tips.length < limit) {
+    const url = `${stacksApiBaseUrl}/extended/v1/address/${contractPrincipal}/transactions?limit=${pageSize}&offset=${offset}`;
+    const response = await fetch(url);
+
+    if (response.status === 429) {
+      await sleep(2_000);
+      continue; // retry same page
+    }
+    if (!response.ok) {
+      throw new Error(`Hiro API error: ${response.status}`);
+    }
+
+    const data: HiroTxListResponse = await response.json();
+
+    for (const tx of data.results) {
+      if (
+        tx.tx_type !== 'contract_call' ||
+        tx.tx_status !== 'success' ||
+        tx.contract_call?.function_name !== 'send-tip'
+      ) continue;
+
+      const args = tx.contract_call.function_args;
+      const recipientArg = args.find(a => a.name === 'recipient');
+      const amountArg = args.find(a => a.name === 'amount');
+      const messageArg = args.find(a => a.name === 'message');
+
+      const amountMicro = amountArg ? parseReprUint(amountArg.repr) : 0;
+      const amountSTX = amountMicro / 1_000_000;
+      const fee = Number((amountSTX * TIP_FEE_RATE).toFixed(6));
+      const tipId = tx.tx_result ? parseTipIdFromResult(tx.tx_result.repr) : null;
+
+      const tip: TipEntry = {
+        id: tipId !== null ? String(tipId) : tx.tx_id.slice(0, 8),
+        txid: tx.tx_id,
+        sender: tx.sender_address,
+        recipient: recipientArg ? parseReprPrincipal(recipientArg.repr) : '',
+        amountSTX,
+        fee,
+        message: messageArg ? parseReprString(messageArg.repr) : '',
+        timestamp: new Date(tx.block_time * 1000),
+        status: 'confirmed',
+        blockHeight: tx.block_height,
+      };
+
+      // Seed the per-tip cache so getTipById doesn't need a contract call
+      if (tipId !== null) {
+        tipByIdCache.set(tipId, { value: tip, expiresAt: now() + TIP_BY_ID_TTL_MS });
+      }
+
+      tips.push(tip);
+      if (tips.length >= limit) break;
+    }
+
+    if (offset + pageSize >= data.total || data.results.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  return tips.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
 function buildLeaderboard(entries: TipEntry[]) {
@@ -387,11 +522,24 @@ export async function getPlatformStats(): Promise<{
 }
 
 export async function getTipById(tipId: number): Promise<TipEntry | null> {
+  // Check per-tip cache first (populated by getAllTips / fetchTipsViaAPI)
   const cached = tipByIdCache.get(tipId);
   if (cached && cached.expiresAt > now()) {
     return cached.value;
   }
 
+  // Check if allTipsCache has this tip already
+  for (const [, entry] of allTipsCache) {
+    if (entry.expiresAt > now()) {
+      const found = entry.value.find(t => t.id === String(tipId));
+      if (found) {
+        tipByIdCache.set(tipId, { value: found, expiresAt: now() + TIP_BY_ID_TTL_MS });
+        return found;
+      }
+    }
+  }
+
+  // Fallback: single contract read (rare — only for deep-linked tips not yet cached)
   try {
     const cv = await callReadOnlyWithRetry({
       contractAddress: CONTRACT_ADDRESS,
@@ -457,18 +605,8 @@ export async function getAllTips(limit = 40): Promise<TipEntry[]> {
 
   const loadPromise = (async () => {
   try {
-    const stats = await getPlatformStats();
-    if (stats.totalTips === 0) return [];
-
-    const end = stats.totalTips;
-    const start = Math.max(0, end - limit);
-    const ids = Array.from({ length: end - start }, (_, index) => start + index);
-
-    const tips = await mapWithConcurrency(ids, 2, (id) => getTipById(id), 500);
-
-    const result = tips
-      .filter((tip): tip is TipEntry => tip !== null)
-      .sort((a, b) => Number(b.id) - Number(a.id));
+    // Use the Hiro extended API — 1-3 requests instead of N*2
+    const result = await fetchTipsViaAPI(limit);
 
     allTipsCache.set(limit, {
       value: result,
