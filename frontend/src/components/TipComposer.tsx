@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TxStatus } from './TxStatus';
-import { Check, Loader2, MessageSquare, Send, AlertCircle } from 'lucide-react';
+import { Check, Loader as Loader2, MessageSquare, Send, CircleAlert as AlertCircle } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
 import { sendTip } from '@/lib/contract';
 
@@ -26,7 +26,25 @@ export function TipComposer() {
   const total = parsedAmount + fee;
 
   const isValidAddress = recipient.startsWith('SP') && recipient.length > 30;
-  const isReady = isValidAddress && parsedAmount > 0 && isConnected;
+  const isAmountValid = parsedAmount > 0 && parsedAmount <= 999999999;
+  const isReady = isValidAddress && isAmountValid && isConnected;
+
+  const getAddressError = () => {
+    if (!recipient) return '';
+    if (!recipient.startsWith('SP')) return 'Address must start with SP';
+    if (recipient.length < 34) return 'Address is too short';
+    return '';
+  };
+
+  const getAmountError = () => {
+    if (!amount) return '';
+    if (parsedAmount <= 0) return 'Amount must be greater than 0';
+    if (parsedAmount > 999999999) return 'Amount exceeds maximum';
+    return '';
+  };
+
+  const addressError = getAddressError();
+  const amountError = getAmountError();
 
   const handleRecipientChange = (val: string) => {
     setRecipient(val);
@@ -115,14 +133,28 @@ export function TipComposer() {
 
       {/* Recipient */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-[length:var(--text-sm)] font-medium text-foreground">Recipient</label>
+        <label htmlFor="recipient-input" className="text-[length:var(--text-sm)] font-medium text-foreground">
+          Recipient Address
+        </label>
         <Input
+          id="recipient-input"
           placeholder="SPxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
           value={recipient}
           onChange={e => handleRecipientChange(e.target.value)}
-          className="font-mono text-[length:var(--text-sm)]"
+          className={`font-mono text-[length:var(--text-sm)] ${
+            addressError && recipient ? 'border-destructive focus-visible:ring-destructive' : ''
+          }`}
           disabled={state === 'pending' || loading}
+          aria-label="Recipient address"
+          aria-invalid={!!addressError && !!recipient}
+          aria-describedby={addressError && recipient ? 'recipient-error' : undefined}
         />
+        {addressError && recipient && (
+          <span id="recipient-error" className="text-[length:var(--text-xs)] text-destructive flex items-center gap-1">
+            <AlertCircle className="h-3 w-3" />
+            {addressError}
+          </span>
+        )}
       </div>
 
       {/* Amount — appears after recipient has content */}
@@ -136,8 +168,11 @@ export function TipComposer() {
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-1.5">
-              <label className="text-[length:var(--text-sm)] font-medium text-foreground">Amount (STX)</label>
+              <label htmlFor="amount-input" className="text-[length:var(--text-sm)] font-medium text-foreground">
+                Amount (STX)
+              </label>
               <Input
+                id="amount-input"
                 type="number"
                 placeholder="0.00"
                 value={amount}
@@ -145,9 +180,22 @@ export function TipComposer() {
                 min="0"
                 step="0.01"
                 disabled={state === 'pending' || loading}
+                className={`${
+                  amountError && amount ? 'border-destructive focus-visible:ring-destructive' : ''
+                }`}
+                aria-label="Tip amount in STX"
+                aria-invalid={!!amountError && !!amount}
+                aria-describedby={amountError && amount ? 'amount-error' : 'amount-details'}
               />
+              {amountError && amount && (
+                <span id="amount-error" className="text-[length:var(--text-xs)] text-destructive flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {amountError}
+                </span>
+              )}
               {parsedAmount > 0 && (
                 <motion.div
+                  id="amount-details"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="flex items-center justify-between text-[length:var(--text-xs)] text-muted-foreground"
@@ -181,8 +229,11 @@ export function TipComposer() {
               </button>
             ) : (
               <div className="flex flex-col gap-1.5">
-                <label className="text-[length:var(--text-sm)] font-medium text-foreground">Message</label>
+                <label htmlFor="message-input" className="text-[length:var(--text-sm)] font-medium text-foreground">
+                  Message (Optional)
+                </label>
                 <Textarea
+                  id="message-input"
                   placeholder="Say something nice…"
                   value={message}
                   onChange={e => setMessage(e.target.value)}
@@ -190,6 +241,7 @@ export function TipComposer() {
                   maxLength={280}
                   disabled={state === 'pending' || loading}
                   className="resize-none text-[length:var(--text-sm)]"
+                  aria-label="Optional tip message"
                 />
                 <span className="text-[length:var(--text-xs)] text-muted-foreground text-right">
                   {message.length}/280

@@ -37,7 +37,7 @@ export default function Profile() {
         </div>
 
         {/* Stats */}
-        <div className="flex flex-wrap gap-8 mb-[var(--space-wide)]">
+        <div className="flex flex-wrap gap-4 sm:gap-8 mb-[var(--space-wide)]">
           <StatValue value={sent.length} label="Tips sent" />
           <StatValue value={received.length} label="Tips received" />
           <StatValue value={Math.abs(netVolume)} label="Net volume" suffix="STX" decimals={2} />

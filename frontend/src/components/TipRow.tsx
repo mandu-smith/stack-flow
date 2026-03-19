@@ -45,23 +45,23 @@ export function TipRow({ tip }: TipRowProps) {
       <div
         onClick={handleRowClick}
         className={cn(
-          'flex w-full items-center gap-3 px-4 py-3 text-left cursor-pointer'
+          'flex w-full items-center gap-2 px-3 py-3 text-left cursor-pointer sm:gap-3 sm:px-4'
         )}
         role="button"
         tabIndex={0}
         onKeyDown={e => e.key === 'Enter' && navigate(`/tip/${tip.id}`)}
       >
-        <span className="shrink-0 text-[length:var(--text-xs)] text-muted-foreground tabular-nums w-14">
+        <span className="shrink-0 text-[length:var(--text-xs)] text-muted-foreground tabular-nums w-12 sm:w-14">
           {timeAgo(tip.timestamp)}
         </span>
 
         <AddressPill address={tip.sender} />
 
-        <span className="text-muted-foreground text-[length:var(--text-xs)]">→</span>
+        <span className="hidden text-muted-foreground text-[length:var(--text-xs)] sm:inline">→</span>
 
         <AddressPill address={tip.recipient} />
 
-        <AmountDisplay amountSTX={tip.amountSTX} className="ml-auto text-[length:var(--text-sm)]" />
+        <AmountDisplay amountSTX={tip.amountSTX} className="ml-auto text-[length:var(--text-xs)] sm:text-[length:var(--text-sm)]" />
 
         <TxStatus status={tip.status} className="hidden sm:inline-flex w-20" />
 

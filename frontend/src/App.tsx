@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { WalletProvider } from '@/contexts/WalletContext';
 import { Navbar } from '@/components/Navbar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { detectNodeNetwork, networkName, stacksApiBaseUrl } from '@/lib/stacks-config';
 import Index from './pages/Index';
 import Feed from './pages/Feed';
@@ -93,13 +94,14 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <QueryClientProvider client={queryClient}>
-        <WalletProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+    <ErrorBoundary>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <QueryClientProvider client={queryClient}>
+          <WalletProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
               {networkWarning && !warningDismissed && (
                 <div className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-[length:var(--text-sm)] text-destructive">
                   <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
@@ -137,11 +139,12 @@ const App = () => {
                 <Route path="/profile/:address" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </WalletProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+              </BrowserRouter>
+            </TooltipProvider>
+          </WalletProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

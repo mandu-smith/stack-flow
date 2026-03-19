@@ -288,7 +288,6 @@ export async function sendTip(
 
     return result;
   } catch (error) {
-    console.error('Error sending tip:', error);
     throw error;
   }
 }
@@ -319,7 +318,6 @@ export async function getUserTipStats(userAddress: string): Promise<{
       tipsReceived: Number(value['tips-received']?.value ?? 0),
     };
   } catch (error) {
-    console.error('Error getting user tip stats:', error);
     throw error;
   }
 }
@@ -374,8 +372,6 @@ export async function getPlatformStats(): Promise<{
 
     return result;
   } catch (error) {
-    console.error('Error getting platform stats:', error);
-
     // Degrade gracefully on persistent rate-limit failures.
     if (platformStatsCache) {
       return platformStatsCache.value;
@@ -444,7 +440,6 @@ export async function getTipById(tipId: number): Promise<TipEntry | null> {
 
     return tip;
   } catch (error) {
-    console.error(`Error getting tip by id ${tipId}:`, error);
     return null;
   }
 }
@@ -482,8 +477,6 @@ export async function getAllTips(limit = 40): Promise<TipEntry[]> {
 
     return result;
   } catch (error) {
-    console.error('Error getting all tips:', error);
-
     if (cached) {
       return cached.value;
     }

@@ -38,7 +38,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           }
         }
       } catch (error) {
-        console.error('Error checking wallet connection:', error);
+        // Silently fail wallet connection check on mount
       }
     };
 
@@ -66,7 +66,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }));
       }
     } catch (error) {
-      console.error('Error connecting wallet:', error);
+      // Error is handled by caller
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Clear session storage
       sessionStorage.removeItem('stacks-wallet-session');
     } catch (error) {
-      console.error('Error disconnecting wallet:', error);
+      // Error is handled silently
     } finally {
       setLoading(false);
     }
