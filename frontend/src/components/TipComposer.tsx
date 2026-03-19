@@ -8,7 +8,7 @@ import { Check, Loader as Loader2, MessageSquare, Send, CircleAlert as AlertCirc
 import { useWallet } from '@/contexts/WalletContext';
 import { sendTip } from '@/lib/contract';
 import { validateStacksAddress } from '@stacks/transactions';
-import { isMainnet } from '@/lib/stacks-config';
+import { isMainnet, explorerTxUrl } from '@/lib/stacks-config';
 
 type ComposerState = 'idle' | 'filling' | 'ready' | 'pending' | 'confirmed' | 'failed';
 
@@ -111,7 +111,14 @@ export function TipComposer() {
         </p>
         <div className="w-full rounded-md bg-secondary px-3 py-2">
           <span className="text-[length:var(--text-xs)] text-muted-foreground">Tx ID</span>
-          <p className="font-mono text-[length:var(--text-xs)] break-all text-foreground">{txid}</p>
+          <a
+            href={explorerTxUrl(txid)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block font-mono text-[length:var(--text-xs)] break-all text-primary hover:underline"
+          >
+            {txid}
+          </a>
         </div>
         <Button onClick={handleReset} variant="outline" className="mt-2">
           Send another tip
