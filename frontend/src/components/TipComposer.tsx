@@ -281,8 +281,10 @@ export function TipComposer() {
               <button
                 onClick={() => setShowMessage(true)}
                 className="flex items-center gap-1.5 text-[length:var(--text-sm)] text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Add a message (optional)"
+                type="button"
               >
-                <MessageSquare className="h-3.5 w-3.5" />
+                <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                 Add a message (optional)
               </button>
             ) : (
@@ -321,15 +323,17 @@ export function TipComposer() {
             onClick={handleSend}
             disabled={!isReady || state === 'pending' || loading}
             className="w-full gap-2"
+            aria-label={state === 'pending' || loading ? 'Sending tip' : parsedAmount > 0 ? `Send ${total.toFixed(2)} STX` : 'Send tip'}
+            role="button"
           >
             {state === 'pending' || loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" focusable="false" />
                 Sending…
               </>
             ) : (
               <>
-                <Send className="h-4 w-4" />
+                <Send className="h-4 w-4" aria-hidden="true" focusable="false" />
                 Send {parsedAmount > 0 ? `${total.toFixed(2)} STX` : 'tip'}
               </>
             )}
