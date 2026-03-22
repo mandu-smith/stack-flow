@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +11,7 @@ import { EmptyState } from '@/components/EmptyState';
 import type { TipEntry } from '@/lib/types';
 import { getTipsForAddress } from '@/lib/contract';
 import { validateStacksAddress } from '@stacks/transactions';
+import { toast } from '@/hooks/use-toast';
 
 export default function Profile() {
   const { address } = useParams<{ address: string }>();
@@ -27,6 +29,16 @@ export default function Profile() {
   const sent = data?.sent ?? [];
   const received = data?.received ?? [];
   const netVolume = received.reduce((s, t) => s + t.amountSTX, 0) - sent.reduce((s, t) => s + t.amountSTX, 0);
+
+  useEffect(() => {
+    if (address && !isValidAddress) {
+      toast({
+        title: 'Invalid Stacks address',
+        description: 'The address provided is not a valid Stacks address.',
+        variant: 'destructive',
+      });
+    }
+  }, [address, isValidAddress]);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-[var(--space-wide)]">
