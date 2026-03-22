@@ -420,6 +420,12 @@ export async function sendTip(
 
     return result;
   } catch (error) {
+    // Map Clarity error codes to plain-language messages
+    const msg = toErrorMessage(error);
+    if (/err u1/.test(msg)) throw new Error('Tip amount must be greater than zero');
+    if (/err u2/.test(msg)) throw new Error('Insufficient balance');
+    if (/err u3/.test(msg)) throw new Error('You cannot tip yourself');
+    if (/err u4/.test(msg)) throw new Error('Recipient address is invalid');
     throw error;
   }
 }
