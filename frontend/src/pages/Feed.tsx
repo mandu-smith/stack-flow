@@ -5,6 +5,8 @@ import { EmptyState } from '@/components/EmptyState';
 import type { TipEntry } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
 import { getAllTips } from '@/lib/contract';
+import { useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 export default function Feed() {
   const { data: tips, isLoading } = useQuery<TipEntry[]>({
@@ -12,6 +14,16 @@ export default function Feed() {
     queryFn: async () => getAllTips(100),
     retry: false,
     refetchInterval: 10000, // Poll every 10s
+  });
+
+  // Virtualizer setup
+  const parentRef = useRef<HTMLDivElement>(null);
+  const rowHeight = 64; // px, adjust to match TipRow height
+  const virtualizer = useVirtualizer({
+    count: tips?.length || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => rowHeight,
+    overscan: 6,
   });
 
   return (
@@ -28,13 +40,34 @@ export default function Feed() {
           Recent tips across the network
         </p>
 
-        <div className="rounded-lg bg-card shadow-base overflow-hidden">
+        <div className="rounded-lg bg-card shadow-base overflow-hidden" style={{ height: '480px', maxHeight: '60vh' }}>
           {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)
           ) : !tips || tips.length === 0 ? (
             <EmptyState />
           ) : (
-            tips.map(tip => <TipRow key={tip.id} tip={tip} />)
+            <div ref={parentRef} style={{ height: '100%', overflow: 'auto' }}>
+              <div style={{ height: `${virtualizer.getTotalSize()}px`, position: 'relative' }}>
+                {virtualizer.getVirtualItems().map(virtualRow => {
+                  const tip = tips[virtualRow.index];
+                  return (
+                    <div
+                      key={tip.id}
+                      ref={virtualizer.measureElement}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        transform: `translateY(${virtualRow.start}px)`
+                      }}
+                    >
+                      <TipRow tip={tip} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
       </motion.div>
