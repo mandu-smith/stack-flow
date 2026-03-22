@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,20 @@ import { TxStatus } from './TxStatus';
 import { Check, Loader as Loader2, MessageSquare, Send, CircleAlert as AlertCircle } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
 import { sendTip, clearContractCaches } from '@/lib/contract';
+// Helper to poll Hiro API for tx status
+async function fetchTxStatus(txid: string): Promise<'pending' | 'confirmed' | 'failed'> {
+  try {
+    const res = await fetch(`https://api.hiro.so/extended/v1/tx/${txid}`);
+    if (!res.ok) return 'pending';
+    const data = await res.json();
+    if (data.tx_status === 'success') return 'confirmed';
+    if (data.tx_status === 'abort_by_response' || data.tx_status === 'abort_by_post_condition' || data.tx_status === 'abort_by_block_limit' || data.tx_status === 'abort_by_expiration') return 'failed';
+    if (data.tx_status === 'pending' || data.tx_status === 'submitted') return 'pending';
+    return 'pending';
+  } catch {
+    return 'pending';
+  }
+}
 import { useQueryClient } from '@tanstack/react-query';
 import { validateStacksAddress } from '@stacks/transactions';
 import { isMainnet, explorerTxUrl } from '@/lib/stacks-config';
@@ -22,6 +36,7 @@ export function TipComposer() {
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [txid, setTxid] = useState('');
+  const [txStatus, setTxStatus] = useState<'pending' | 'confirmed' | 'failed'>('pending');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -80,7 +95,8 @@ export function TipComposer() {
         queryClient.invalidateQueries({ queryKey: ['profile'] });
 
         setTxid(result.txid);
-        setState('confirmed');
+        setTxStatus('pending');
+        setState('pending');
       } else if (result?.cancel) {
         setState('idle');
       }
@@ -102,6 +118,25 @@ export function TipComposer() {
     setTxid('');
     setError('');
   };
+
+  // Poll for tx confirmation if pending
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined;
+    if (state === 'pending' && txid) {
+      setTxStatus('pending');
+      interval = setInterval(async () => {
+        const status = await fetchTxStatus(txid);
+        setTxStatus(status);
+        if (status !== 'pending') {
+          setState('confirmed');
+          clearInterval(interval);
+        }
+      }, 5000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [state, txid]);
 
   if (state === 'confirmed' && txid) {
     return (
@@ -128,6 +163,7 @@ export function TipComposer() {
             {txid}
           </a>
         </div>
+        <TxStatus status={txStatus} />
         <Button onClick={handleReset} variant="outline" className="mt-2">
           Send another tip
         </Button>
@@ -302,7 +338,7 @@ export function TipComposer() {
 
         {state === 'pending' && (
           <div className="flex justify-center">
-            <TxStatus status="pending" />
+            <TxStatus status={txStatus} />
           </div>
         )}
       </div>
