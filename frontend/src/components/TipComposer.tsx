@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { toast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -97,6 +98,10 @@ export function TipComposer() {
         setTxid(result.txid);
         setTxStatus('pending');
         setState('pending');
+        toast({
+          title: 'Tip sent!',
+          description: `${parsedAmount} STX sent successfully.`,
+        });
       } else if (result?.cancel) {
         setState('idle');
       }
@@ -104,6 +109,11 @@ export function TipComposer() {
       const errorMsg = err instanceof Error ? err.message : 'Failed to send tip';
       setError(errorMsg);
       setState('idle');
+      toast({
+        title: 'Failed to send tip',
+        description: errorMsg,
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
