@@ -11,6 +11,7 @@ export default function Feed() {
     queryKey: ['tips'],
     queryFn: async () => getAllTips(100),
     retry: false,
+    refetchInterval: 10000, // Poll every 10s
   });
 
   return (
