@@ -71,13 +71,16 @@ const TipRowComponent = ({ tip }: TipRowProps) => {
             onClick={handleChevronClick}
             className="p-1 -m-1"
             aria-expanded={expanded}
-            aria-label="Toggle message"
+            aria-label={expanded ? 'Hide tip message' : 'Show tip message'}
+            type="button"
           >
             <ChevronDown
               className={cn(
                 'h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-200',
                 expanded && 'rotate-180'
               )}
+              aria-hidden="true"
+              focusable="false"
             />
           </button>
         )}
