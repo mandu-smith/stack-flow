@@ -6,13 +6,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { TxStatus } from './TxStatus';
 import { Check, Loader as Loader2, MessageSquare, Send, CircleAlert as AlertCircle } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
-import { sendTip } from '@/lib/contract';
+import { sendTip, clearContractCaches } from '@/lib/contract';
+import { useQueryClient } from '@tanstack/react-query';
 import { validateStacksAddress } from '@stacks/transactions';
 import { isMainnet, explorerTxUrl } from '@/lib/stacks-config';
 
 type ComposerState = 'idle' | 'filling' | 'ready' | 'pending' | 'confirmed' | 'failed';
 
 export function TipComposer() {
+  const queryClient = useQueryClient();
   const { isConnected, walletAddress } = useWallet();
   const [state, setState] = useState<ComposerState>('idle');
   const [recipient, setRecipient] = useState('');
@@ -62,15 +64,21 @@ export function TipComposer() {
 
   const handleSend = async () => {
     if (!isReady || !walletAddress) return;
-    
     try {
       setError('');
       setState('pending');
       setLoading(true);
 
       const result = await sendTip(walletAddress, recipient, Math.floor(parsedAmount * 1e6), message);
-      
+
       if (result?.txid) {
+        // Invalidate React Query caches and clear in-memory contract caches
+        clearContractCaches();
+        queryClient.invalidateQueries({ queryKey: ['tips'] });
+        queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
+        queryClient.invalidateQueries({ queryKey: ['platformStats'] });
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+
         setTxid(result.txid);
         setState('confirmed');
       } else if (result?.cancel) {
