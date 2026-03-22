@@ -32,12 +32,13 @@ export function AddressPill({ address, className = '' }: AddressPillProps) {
           <button
             onClick={handleCopy}
             className="hover:text-foreground transition-colors"
-            aria-label="Copy address"
+            aria-label={copied ? 'Address copied' : 'Copy address'}
+            type="button"
           >
             {copied ? (
-              <Check className="h-3 w-3 text-success" />
+              <Check className="h-3 w-3 text-success" aria-hidden="true" focusable="false" />
             ) : (
-              <Copy className="h-3 w-3 opacity-50" />
+              <Copy className="h-3 w-3 opacity-50" aria-hidden="true" focusable="false" />
             )}
           </button>
         </Link>
