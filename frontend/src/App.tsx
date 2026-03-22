@@ -102,43 +102,51 @@ const App = () => {
               <Toaster />
               <Sonner />
               <BrowserRouter>
-              {networkWarning && !warningDismissed && (
-                <div className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-[length:var(--text-sm)] text-destructive">
-                  <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
-                    <span>{networkWarning}</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setWarningDismissed(false);
-                          void validateNetwork();
-                        }}
-                        disabled={checkingNetwork}
-                        className="rounded border border-destructive/40 px-2 py-1 text-[length:var(--text-xs)] hover:bg-destructive/10 disabled:opacity-60"
-                      >
-                        {checkingNetwork ? 'Checking...' : 'Retry check'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setWarningDismissed(true)}
-                        className="rounded border border-destructive/40 px-2 py-1 text-[length:var(--text-xs)] hover:bg-destructive/10"
-                      >
-                        Dismiss
-                      </button>
+                {/* Skip to content link */}
+                <a href="#main-content" className="sr-only focus:not-sr-only absolute top-2 left-2 z-[100] bg-background text-foreground px-4 py-2 rounded shadow-lg">Skip to content</a>
+                {networkWarning && !warningDismissed && (
+                  <div className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-[length:var(--text-sm)] text-destructive">
+                    <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
+                      <span>{networkWarning}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setWarningDismissed(false);
+                            void validateNetwork();
+                          }}
+                          disabled={checkingNetwork}
+                          className="rounded border border-destructive/40 px-2 py-1 text-[length:var(--text-xs)] hover:bg-destructive/10 disabled:opacity-60"
+                        >
+                          {checkingNetwork ? 'Checking...' : 'Retry check'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setWarningDismissed(true)}
+                          className="rounded border border-destructive/40 px-2 py-1 text-[length:var(--text-xs)] hover:bg-destructive/10"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/feed" element={<Feed />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/tip" element={<TipPage />} />
-                <Route path="/tip/:id" element={<TipDetail />} />
-                <Route path="/profile/:address" element={<Profile />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+                )}
+                {/* Semantic nav landmark */}
+                <nav aria-label="Main navigation">
+                  <Navbar />
+                </nav>
+                {/* Main content landmark */}
+                <main id="main-content">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/feed" element={<Feed />} />
+                    <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/tip" element={<TipPage />} />
+                    <Route path="/tip/:id" element={<TipDetail />} />
+                    <Route path="/profile/:address" element={<Profile />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
               </BrowserRouter>
             </TooltipProvider>
           </WalletProvider>
