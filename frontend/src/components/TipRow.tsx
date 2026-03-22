@@ -23,7 +23,7 @@ function timeAgo(date: Date): string {
   return `${days}d ago`;
 }
 
-export function TipRow({ tip }: TipRowProps) {
+const TipRowComponent = ({ tip }: TipRowProps) => {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   const hasMessage = !!tip.message;
@@ -102,4 +102,9 @@ export function TipRow({ tip }: TipRowProps) {
       </AnimatePresence>
     </div>
   );
-}
+};
+
+export const TipRow = memo(
+  TipRowComponent,
+  (prev, next) => prev.tip.id === next.tip.id && prev.tip.status === next.tip.status && prev.tip.message === next.tip.message
+);
