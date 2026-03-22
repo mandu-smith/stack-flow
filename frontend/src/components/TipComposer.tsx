@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -40,9 +40,9 @@ export function TipComposer() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const parsedAmount = parseFloat(amount) || 0;
-  const fee = parsedAmount > 0 ? parseFloat((parsedAmount * 0.005).toFixed(4)) : 0;
-  const total = parsedAmount + fee;
+  const parsedAmount = useMemo(() => parseFloat(amount) || 0, [amount]);
+  const fee = useMemo(() => (parsedAmount > 0 ? parseFloat((parsedAmount * 0.005).toFixed(4)) : 0), [parsedAmount]);
+  const total = useMemo(() => parsedAmount + fee, [parsedAmount, fee]);
 
   // Validate using @stacks/transactions validateStacksAddress and check correct network prefix
   const expectedPrefix = isMainnet ? 'SP' : 'ST';
