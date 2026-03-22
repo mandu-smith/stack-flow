@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Wallet, Copy, LogOut, Check, User, Loader2 } from 'lucide-react';
+import { Wallet, Copy, LogOut, Check, User, Loader2, Menu } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/contexts/WalletContext';
@@ -11,6 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+} from '@/components/ui/sheet';
 
 export function Navbar() {
   const [copied, setCopied] = useState(false);
@@ -34,6 +39,7 @@ export function Navbar() {
           </span>
         </Link>
 
+        {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-6">
           <Link
             to="/"
@@ -54,6 +60,39 @@ export function Navbar() {
             Activity
           </Link>
         </nav>
+
+        {/* Mobile nav: Sheet drawer */}
+        <div className="sm:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Open menu">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-64">
+              <nav className="flex flex-col gap-2 p-6">
+                <Link
+                  to="/"
+                  className="text-[length:var(--text-lg)] font-semibold text-foreground py-2 px-1 rounded hover:bg-accent"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/leaderboard"
+                  className="text-[length:var(--text-lg)] font-semibold text-foreground py-2 px-1 rounded hover:bg-accent"
+                >
+                  Leaderboard
+                </Link>
+                <Link
+                  to="/feed"
+                  className="text-[length:var(--text-lg)] font-semibold text-foreground py-2 px-1 rounded hover:bg-accent"
+                >
+                  Activity
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
