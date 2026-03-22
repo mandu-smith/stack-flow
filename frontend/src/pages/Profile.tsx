@@ -9,14 +9,18 @@ import { SkeletonRow } from '@/components/SkeletonRow';
 import { EmptyState } from '@/components/EmptyState';
 import type { TipEntry } from '@/lib/types';
 import { getTipsForAddress } from '@/lib/contract';
+import { validateStacksAddress } from '@stacks/transactions';
 
 export default function Profile() {
   const { address } = useParams<{ address: string }>();
 
+  // Validate address using @stacks/transactions
+  const isValidAddress = address && validateStacksAddress(address);
+
   const { data, isLoading } = useQuery({
     queryKey: ['profile', address],
     queryFn: async () => getTipsForAddress(address!),
-    enabled: !!address,
+    enabled: !!address && isValidAddress,
     retry: false,
   });
 
@@ -36,42 +40,50 @@ export default function Profile() {
           {address && <AddressPill address={address} />}
         </div>
 
-        {/* Stats */}
-        <div className="flex flex-wrap gap-4 sm:gap-8 mb-[var(--space-wide)]">
-          <StatValue value={sent.length} label="Tips sent" />
-          <StatValue value={received.length} label="Tips received" />
-          <StatValue value={Math.abs(netVolume)} label="Net volume" suffix="STX" decimals={2} />
-        </div>
+        {!isValidAddress ? (
+          <div className="rounded-lg bg-destructive/10 p-4 text-destructive text-[length:var(--text-md)] font-medium mb-8">
+            Invalid Stacks address.
+          </div>
+        ) : (
+          <>
+            {/* Stats */}
+            <div className="flex flex-wrap gap-4 sm:gap-8 mb-[var(--space-wide)]">
+              <StatValue value={sent.length} label="Tips sent" />
+              <StatValue value={received.length} label="Tips received" />
+              <StatValue value={Math.abs(netVolume)} label="Net volume" suffix="STX" decimals={2} />
+            </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="received">
-          <TabsList>
-            <TabsTrigger value="received">Received ({received.length})</TabsTrigger>
-            <TabsTrigger value="sent">Sent ({sent.length})</TabsTrigger>
-          </TabsList>
-          <TabsContent value="received">
-            <div className="rounded-lg bg-card shadow-base overflow-hidden">
-              {isLoading ? (
-                Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
-              ) : received.length === 0 ? (
-                <EmptyState />
-              ) : (
-                received.map(tip => <TipRow key={tip.id} tip={tip} />)
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="sent">
-            <div className="rounded-lg bg-card shadow-base overflow-hidden">
-              {isLoading ? (
-                Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
-              ) : sent.length === 0 ? (
-                <EmptyState />
-              ) : (
-                sent.map(tip => <TipRow key={tip.id} tip={tip} />)
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
+            {/* Tabs */}
+            <Tabs defaultValue="received">
+              <TabsList>
+                <TabsTrigger value="received">Received ({received.length})</TabsTrigger>
+                <TabsTrigger value="sent">Sent ({sent.length})</TabsTrigger>
+              </TabsList>
+              <TabsContent value="received">
+                <div className="rounded-lg bg-card shadow-base overflow-hidden">
+                  {isLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
+                  ) : received.length === 0 ? (
+                    <EmptyState />
+                  ) : (
+                    received.map(tip => <TipRow key={tip.id} tip={tip} />)
+                  )}
+                </div>
+              </TabsContent>
+              <TabsContent value="sent">
+                <div className="rounded-lg bg-card shadow-base overflow-hidden">
+                  {isLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
+                  ) : sent.length === 0 ? (
+                    <EmptyState />
+                  ) : (
+                    sent.map(tip => <TipRow key={tip.id} tip={tip} />)
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </>
+        )}
       </motion.div>
     </main>
   );
