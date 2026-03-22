@@ -65,8 +65,8 @@ export function Navbar() {
         <div className="sm:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" aria-label="Open navigation menu" role="button">
+                <Menu className="h-6 w-6" aria-hidden="true" focusable="false" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-64">
@@ -104,24 +104,26 @@ export function Navbar() {
                   variant="outline"
                   size="sm"
                   className="gap-2 font-mono text-[length:var(--text-xs)]"
+                  aria-label="Wallet menu"
+                  role="button"
                 >
-                  <Wallet className="h-3.5 w-3.5" />
+                  <Wallet className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                   {displayName}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleCopy} className="gap-2">
+                <DropdownMenuItem onClick={handleCopy} className="gap-2" aria-label="Copy wallet address" role="menuitem">
                   {copied ? (
-                    <Check className="h-3.5 w-3.5" />
+                    <Check className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                   ) : (
-                    <Copy className="h-3.5 w-3.5" />
+                    <Copy className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                   )}
                   {copied ? 'Copied!' : 'Copy address'}
                 </DropdownMenuItem>
                 {walletAddress && (
                   <DropdownMenuItem asChild className="gap-2">
-                    <Link to={`/profile/${walletAddress}`}>
-                      <User className="h-3.5 w-3.5" />
+                    <Link to={`/profile/${walletAddress}`} aria-label="View profile" role="menuitem">
+                      <User className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                       Profile
                     </Link>
                   </DropdownMenuItem>
@@ -131,8 +133,10 @@ export function Navbar() {
                   onClick={disconnectWallet}
                   className="gap-2 text-destructive"
                   disabled={loading}
+                  aria-label="Disconnect wallet"
+                  role="menuitem"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
+                  <LogOut className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
                   Disconnect
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -143,11 +147,13 @@ export function Navbar() {
               onClick={connectWallet}
               disabled={loading}
               className="gap-2"
+              aria-label={loading ? 'Connecting wallet' : 'Connect wallet'}
+              role="button"
             >
               {loading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" focusable="false" />
               ) : (
-                <Wallet className="h-3.5 w-3.5" />
+                <Wallet className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
               )}
               <span className="hidden sm:inline">
                 {loading ? 'Connecting...' : 'Connect wallet'}
