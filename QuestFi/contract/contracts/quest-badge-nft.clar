@@ -16,3 +16,4 @@
 ;; Constants
 (define-constant CONTRACT_OWNER tx-sender)
 (define-constant ERR_OWNER_ONLY (err u100))
+(define-constant ERR_NOT_TOKEN_OWNER (err u101))
