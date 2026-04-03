@@ -11,3 +11,4 @@
 
 ;; Data vars
 (define-data-var last-token-id uint u0)
+(define-data-var base-token-uri (string-ascii 256) "https://stxfinance.xyz/api/metadata/")
