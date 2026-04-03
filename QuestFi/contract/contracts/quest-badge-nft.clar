@@ -15,3 +15,4 @@
 
 ;; Constants
 (define-constant CONTRACT_OWNER tx-sender)
+(define-constant ERR_OWNER_ONLY (err u100))
