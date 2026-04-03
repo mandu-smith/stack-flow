@@ -26,3 +26,4 @@
   uint
   {
     protocol: (string-ascii 50),
+    owner: principal,
