@@ -20,3 +20,6 @@
 (define-constant ERR_UNAUTHORIZED (err u103))
 (define-constant ERR_ALREADY_CLAIMED (err u104))
 (define-constant ERR_INVALID_QUEST (err u105))
+
+;; Map token ID to quest info
+(define-map token-info
