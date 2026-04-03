@@ -18,3 +18,4 @@
 (define-constant ERR_OWNER_ONLY (err u100))
 (define-constant ERR_NOT_TOKEN_OWNER (err u101))
 (define-constant ERR_UNAUTHORIZED (err u103))
+(define-constant ERR_ALREADY_CLAIMED (err u104))
