@@ -52,3 +52,4 @@
   (string-ascii 50)
   {
     active: bool,
+    xp-reward: uint,
