@@ -50,3 +50,5 @@
 ;; Valid protocol names
 (define-map valid-protocols
   (string-ascii 50)
+  {
+    active: bool,
