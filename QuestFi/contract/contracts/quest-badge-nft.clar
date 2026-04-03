@@ -31,3 +31,6 @@
     xp-earned: uint,
   }
 )
+
+;; Map user + protocol to token ID (prevent duplicate claims)
+(define-map user-protocol-badge
