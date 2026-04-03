@@ -44,3 +44,5 @@
 ;; Track total badges minted per protocol
 (define-map protocol-badge-count
   (string-ascii 50)
+  uint
+)
