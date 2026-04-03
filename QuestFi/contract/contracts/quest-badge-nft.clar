@@ -38,3 +38,5 @@
     user: principal,
     protocol: (string-ascii 50),
   }
+  uint
+)
