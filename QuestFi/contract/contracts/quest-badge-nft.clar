@@ -36,3 +36,5 @@
 (define-map user-protocol-badge
   {
     user: principal,
+    protocol: (string-ascii 50),
+  }
