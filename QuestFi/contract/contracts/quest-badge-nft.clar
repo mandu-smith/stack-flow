@@ -63,3 +63,4 @@
 )
 
 (define-read-only (get-token-uri (token-id uint))
+  (if (> (len (var-get base-token-uri)) u0)
