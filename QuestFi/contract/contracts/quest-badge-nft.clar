@@ -28,3 +28,6 @@
     protocol: (string-ascii 50),
     owner: principal,
     completion-date: uint,
+    xp-earned: uint,
+  }
+)
