@@ -46,3 +46,6 @@
   (string-ascii 50)
   uint
 )
+
+;; Valid protocol names
+(define-map valid-protocols
