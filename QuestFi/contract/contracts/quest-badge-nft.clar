@@ -8,3 +8,6 @@
 
 ;; Define the NFT
 (define-non-fungible-token quest-badge uint)
+
+;; Data vars
+(define-data-var last-token-id uint u0)
