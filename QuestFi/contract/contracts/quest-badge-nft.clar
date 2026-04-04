@@ -196,3 +196,5 @@
 ; Set base token URI
 ;; #[allow(unchecked_data)]
 (define-public (set-base-token-uri (uri (string-ascii 256)))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
