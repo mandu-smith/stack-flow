@@ -102,3 +102,4 @@
       (is-none (map-get? user-protocol-badge {
         user: tx-sender,
         protocol: protocol,
+        owner: tx-sender,
