@@ -104,3 +104,5 @@
         protocol: protocol,
         owner: tx-sender,
         completion-date: stacks-block-height,
+        xp-earned: (get xp-reward protocol-info),
+    })
