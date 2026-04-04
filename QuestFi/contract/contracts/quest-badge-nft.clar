@@ -103,3 +103,4 @@
         user: tx-sender,
         protocol: protocol,
         owner: tx-sender,
+        completion-date: stacks-block-height,
