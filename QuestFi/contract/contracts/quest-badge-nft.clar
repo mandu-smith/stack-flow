@@ -188,3 +188,7 @@
     (map-set valid-protocols protocol {
       active: active,
       xp-reward: xp-reward,
+      })
+    (ok true)
+  )
+)
