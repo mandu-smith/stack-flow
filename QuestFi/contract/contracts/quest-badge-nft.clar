@@ -132,3 +132,5 @@
 
 ;; Get badge information
 (define-read-only (get-badge-info (token-id uint))
+  (ok (map-get? token-info token-id))
+)
