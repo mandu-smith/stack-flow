@@ -99,3 +99,4 @@
 
     ;; Check if user already has badge for this protocol
     (asserts!
+      (is-none (map-get? user-protocol-badge {
