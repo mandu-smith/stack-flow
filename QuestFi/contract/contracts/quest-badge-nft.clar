@@ -82,3 +82,9 @@
   )
   ERR_UNAUTHORIZED
 )
+
+;; Core minting function
+
+;; Mint NFT badge for quest completion
+;; Anyone can call this to mint their own badge after completing a quest
+(define-public (mint-badge (protocol (string-ascii 50)))
