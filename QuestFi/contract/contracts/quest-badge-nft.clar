@@ -217,3 +217,5 @@
   active: true,
   xp-reward: u120,
 })
+
+(map-set valid-protocols "hermetica" {
