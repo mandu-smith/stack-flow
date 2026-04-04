@@ -108,3 +108,5 @@
     })
     (map-set user-protocol-badge {
       user: tx-sender,
+      protocol: protocol,
+    }
