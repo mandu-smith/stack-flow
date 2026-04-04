@@ -211,3 +211,6 @@
 (map-set valid-protocols "stacks" {
   active: true,
   xp-reward: u150,
+})
+
+(map-set valid-protocols "granite" {
