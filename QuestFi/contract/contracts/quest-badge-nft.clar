@@ -180,3 +180,4 @@
 ;; #[allow(unchecked_data)]
 (define-public (set-protocol
     (protocol (string-ascii 50))
+    (active bool)
