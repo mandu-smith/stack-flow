@@ -112,3 +112,5 @@
     }
     token-id
     )
+
+    (map-set protocol-badge-count protocol (+ current-count u1))
