@@ -214,3 +214,6 @@
 })
 
 (map-set valid-protocols "granite" {
+  active: true,
+  xp-reward: u120,
+})
