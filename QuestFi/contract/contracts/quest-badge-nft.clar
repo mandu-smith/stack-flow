@@ -93,3 +93,6 @@
       (token-id (+ (var-get last-token-id) u1))
       (protocol-info (unwrap! (map-get? valid-protocols protocol) ERR_INVALID_QUEST))
       (current-count (default-to u0 (map-get? protocol-badge-count protocol)))
+    )
+    ;; Check if protocol is active
+    (asserts! (get active protocol-info) ERR_INVALID_QUEST)
