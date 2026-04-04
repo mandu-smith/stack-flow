@@ -91,3 +91,4 @@
   (let (
       (token-id (+ (var-get last-token-id) u1))
       (token-id (+ (var-get last-token-id) u1))
+      (protocol-info (unwrap! (map-get? valid-protocols protocol) ERR_INVALID_QUEST))
