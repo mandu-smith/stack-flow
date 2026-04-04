@@ -192,3 +192,7 @@
     (ok true)
   )
 )
+
+; Set base token URI
+;; #[allow(unchecked_data)]
+(define-public (set-base-token-uri (uri (string-ascii 256)))
