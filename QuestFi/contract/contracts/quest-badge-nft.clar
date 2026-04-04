@@ -210,3 +210,4 @@
 })
 (map-set valid-protocols "stacks" {
   active: true,
+  xp-reward: u150,
