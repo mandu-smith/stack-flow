@@ -106,3 +106,4 @@
         completion-date: stacks-block-height,
         xp-earned: (get xp-reward protocol-info),
     })
+    (map-set user-protocol-badge {
