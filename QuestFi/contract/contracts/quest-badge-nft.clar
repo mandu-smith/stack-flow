@@ -96,3 +96,6 @@
     )
     ;; Check if protocol is active
     (asserts! (get active protocol-info) ERR_INVALID_QUEST)
+
+    ;; Check if user already has badge for this protocol
+    (asserts!
