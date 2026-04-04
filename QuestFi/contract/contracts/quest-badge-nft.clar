@@ -68,3 +68,5 @@
   (ok none)
   )
 )
+
+(define-read-only (get-owner (token-id uint))
