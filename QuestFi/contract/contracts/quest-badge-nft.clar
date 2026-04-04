@@ -199,3 +199,6 @@
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
     (var-set base-token-uri uri)
+    (ok true)
+  )
+)
