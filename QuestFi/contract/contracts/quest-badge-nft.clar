@@ -157,3 +157,5 @@
 (define-read-only (has-completed-protocol
     (user principal)
     (protocol (string-ascii 50))
+  )
+  (ok (is-some (map-get? user-protocol-badge {
