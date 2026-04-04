@@ -150,18 +150,11 @@
 (define-read-only (has-completed-protocol
     (user principal)
     (protocol (string-ascii 50))
-    }))
-)
-
-;; Check if user has completed a protocol quest
-(define-read-only (has-completed-protocol
-    (user principal)
-    (protocol (string-ascii 50))
   )
   (ok (is-some (map-get? user-protocol-badge {
     user: user,
     protocol: protocol,
-    })))
+  })))
 )
 
 ;; Get total badges minted for a protocol
@@ -188,12 +181,12 @@
     (map-set valid-protocols protocol {
       active: active,
       xp-reward: xp-reward,
-      })
+    })
     (ok true)
   )
 )
 
-; Set base token URI
+;; Set base token URI
 ;; #[allow(unchecked_data)]
 (define-public (set-base-token-uri (uri (string-ascii 256)))
   (begin
@@ -206,25 +199,25 @@
 ;; Initialize default protocols 
 (map-set valid-protocols "zest" {
   active: true,
-  xp-reward: u100,
+  xp-reward: u50,
 })
-(map-set valid-protocols "stacks" {
+
+(map-set valid-protocols "stackingdao" {
   active: true,
-  xp-reward: u150,
+  xp-reward: u60,
 })
 
 (map-set valid-protocols "granite" {
   active: true,
-  xp-reward: u120,
+  xp-reward: u70,
 })
 
 (map-set valid-protocols "hermetica" {
   active: true,
-  xp-reward: u130,
+  xp-reward: u65,
 })
-
 
 (map-set valid-protocols "arkadiko" {
   active: true,
-  xp-reward: u110,
+  xp-reward: u55,
 })
