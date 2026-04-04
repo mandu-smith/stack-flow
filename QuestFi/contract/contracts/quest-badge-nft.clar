@@ -186,3 +186,4 @@
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
     (map-set valid-protocols protocol {
+      active: active,
