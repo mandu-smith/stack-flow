@@ -222,3 +222,6 @@
   active: true,
   xp-reward: u130,
 })
+
+
+(map-set valid-protocols "arkadiko" {
