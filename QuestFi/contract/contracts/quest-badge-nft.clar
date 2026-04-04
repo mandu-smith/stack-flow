@@ -168,3 +168,6 @@
 (define-read-only (get-protocol-badge-count (protocol (string-ascii 50)))
   (ok (default-to u0 (map-get? protocol-badge-count protocol)))
 )
+
+;; Get protocol info
+(define-read-only (get-protocol-info (protocol (string-ascii 50)))
