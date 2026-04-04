@@ -198,3 +198,4 @@
 (define-public (set-base-token-uri (uri (string-ascii 256)))
   (begin
     (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
+    (var-set base-token-uri uri)
