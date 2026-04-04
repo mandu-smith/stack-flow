@@ -72,3 +72,7 @@
 (define-read-only (get-owner (token-id uint))
   (ok (nft-get-owner? quest-badge token-id))
 )
+
+;; Transfer function - Soul-bound badges cannot be transferred
+;; They represent personal achievement and cannot be traded
+(define-public (transfer
