@@ -138,3 +138,4 @@
 ;; Get user's badge for a specific protocol
 (define-read-only (get-user-badge
   (user principal)
+  (protocol (string-ascii 50))
