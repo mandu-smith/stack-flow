@@ -161,3 +161,8 @@
   (ok (is-some (map-get? user-protocol-badge {
     user: user,
     protocol: protocol,
+    })))
+)
+
+;; Get total badges minted for a protocol
+(define-read-only (get-protocol-badge-count (protocol (string-ascii 50)))
