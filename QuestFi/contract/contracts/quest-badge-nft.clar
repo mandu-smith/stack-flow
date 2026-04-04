@@ -148,3 +148,4 @@
 
 ;; Check if user has completed a protocol quest
 (define-read-only (has-completed-protocol
+    (user principal)
