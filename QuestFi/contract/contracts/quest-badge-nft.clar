@@ -70,3 +70,5 @@
 )
 
 (define-read-only (get-owner (token-id uint))
+  (ok (nft-get-owner? quest-badge token-id))
+)
