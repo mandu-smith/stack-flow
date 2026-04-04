@@ -76,5 +76,7 @@
 ;; Transfer function - Soul-bound badges cannot be transferred
 ;; They represent personal achievement and cannot be traded
 (define-public (transfer
-  (token-id uint)
-  (sender principal)
+    (token-id uint)
+    (sender principal)
+    (recipient principal)
+  )
