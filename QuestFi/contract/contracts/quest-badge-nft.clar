@@ -171,3 +171,5 @@
 
 ;; Get protocol info
 (define-read-only (get-protocol-info (protocol (string-ascii 50)))
+  (ok (map-get? valid-protocols protocol))
+)
