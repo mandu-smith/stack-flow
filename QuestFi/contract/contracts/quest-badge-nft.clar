@@ -80,3 +80,5 @@
     (sender principal)
     (recipient principal)
   )
+  ERR_UNAUTHORIZED
+)
