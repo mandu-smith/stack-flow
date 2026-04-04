@@ -53,7 +53,7 @@
   {
     active: bool,
     xp-reward: uint,
-    }
+  }
 )
 
 ;; SIP-009 required functions
@@ -64,8 +64,8 @@
 
 (define-read-only (get-token-uri (token-id uint))
   (if (> (len (var-get base-token-uri)) u0)
-  (ok (some (var-get base-token-uri)))
-  (ok none)
+    (ok (some (var-get base-token-uri)))
+    (ok none)
   )
 )
 
@@ -90,7 +90,6 @@
 (define-public (mint-badge (protocol (string-ascii 50)))
   (let (
       (token-id (+ (var-get last-token-id) u1))
-      (token-id (+ (var-get last-token-id) u1))
       (protocol-info (unwrap! (map-get? valid-protocols protocol) ERR_INVALID_QUEST))
       (current-count (default-to u0 (map-get? protocol-badge-count protocol)))
     )
@@ -102,15 +101,29 @@
       (is-none (map-get? user-protocol-badge {
         user: tx-sender,
         protocol: protocol,
-        owner: tx-sender,
-        completion-date: stacks-block-height,
-        xp-earned: (get xp-reward protocol-info),
+      }))
+      ERR_ALREADY_CLAIMED
+    )
+
+    ;; Mint the NFT to the caller
+    (try! (nft-mint? quest-badge token-id tx-sender))
+
+    ;; Update data
+    (var-set last-token-id token-id)
+    (map-set token-info token-id {
+      protocol: protocol,
+      owner: tx-sender,
+      completion-date: stacks-block-height,
+      xp-earned: (get xp-reward protocol-info),
     })
     (map-set user-protocol-badge {
       user: tx-sender,
       protocol: protocol,
     }
-    token-id
+      token-id
     )
-
     (map-set protocol-badge-count protocol (+ current-count u1))
+
+    (ok token-id)
+  )
+)
