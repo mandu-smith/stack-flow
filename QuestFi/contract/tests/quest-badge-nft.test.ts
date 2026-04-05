@@ -131,3 +131,12 @@ describe("Quest Badge NFT Contract", () => {
         wallet1
       );
       expect(mint1.result).toBeOk(Cl.uint(1));
+
+      const mint2 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("granite")],
+        wallet2
+      );
+      expect(mint2.result).toBeOk(Cl.uint(2));
+    });
