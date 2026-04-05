@@ -44,3 +44,14 @@ describe("Quest Badge NFT Contract", () => {
       );
       expect(result).toBeOk(Cl.uint(0));
     });
+
+    it("initializes with correct protocol badge counts", () => {
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-protocol-badge-count",
+        [Cl.stringAscii("zest")],
+        wallet1
+      );
+      expect(result).toBeOk(Cl.uint(0));
+    });
+  });
