@@ -259,3 +259,10 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("stackingdao")],
         wallet1
       );
+
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-owner",
+        [Cl.uint(1)],
+        wallet1
+      );
