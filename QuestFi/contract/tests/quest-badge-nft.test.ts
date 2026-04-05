@@ -586,3 +586,12 @@ describe("Quest Badge NFT Contract", () => {
 
     it("handles all 5 default protocols for single user", () => {
       const protocols = ["zest", "stackingdao", "granite", "hermetica", "arkadiko"];
+
+      protocols.forEach((protocol, index) => {
+        const mint = simnet.callPublicFn(
+          "quest-badge-nft",
+          "mint-badge",
+          [Cl.stringAscii(protocol)],
+          wallet1
+        );
+        expect(mint.result).toBeOk(Cl.uint(index + 1));
