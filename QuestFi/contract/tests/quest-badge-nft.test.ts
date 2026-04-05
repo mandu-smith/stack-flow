@@ -8,3 +8,7 @@ const wallet2 = accounts.get("wallet_2")!;
 const wallet3 = accounts.get("wallet_3")!;
 
 describe("Quest Badge NFT Contract", () => {
+
+  describe("Initialization", () => {
+    it("initializes with 5 default protocols", () => {
+      const protocols = ["zest", "stackingdao", "granite", "hermetica", "arkadiko"];
