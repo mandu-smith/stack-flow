@@ -302,3 +302,11 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(result).toBeErr(Cl.uint(103)); // ERR_UNAUTHORIZED
     });
+
+    it("prevents transfer even by contract owner", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("arkadiko")],
+        wallet1
+      );
