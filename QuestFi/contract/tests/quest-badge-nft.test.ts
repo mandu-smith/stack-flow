@@ -482,3 +482,14 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeErr(Cl.uint(100)); // ERR_OWNER_ONLY
     });
   });
+
+  describe("Integration Scenarios", () => {
+    it("handles multiple users minting multiple protocols", () => {
+      // Wallet 1 mints zest and granite
+      const w1m1 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("zest")],
+        wallet1
+      );
+      expect(w1m1.result).toBeOk(Cl.uint(1));
