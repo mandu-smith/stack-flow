@@ -250,3 +250,12 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeErr(Cl.uint(105)); // ERR_INVALID_QUEST
     });
   });
+
+  describe("NFT Ownership", () => {
+    it("correctly assigns NFT ownership", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("stackingdao")],
+        wallet1
+      );
