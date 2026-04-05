@@ -443,3 +443,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("zest"), Cl.bool(true), Cl.uint(100)],
         wallet1
       );
+
+      expect(result).toBeErr(Cl.uint(100)); // ERR_OWNER_ONLY
+    });
+  });
