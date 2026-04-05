@@ -187,3 +187,11 @@ describe("Quest Badge NFT Contract", () => {
       );
       expect(mint2.result).toBeErr(Cl.uint(104)); // ERR_ALREADY_CLAIMED
     });
+
+    it("tracks user-protocol badge mapping", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("zest")],
+        wallet1
+      );
