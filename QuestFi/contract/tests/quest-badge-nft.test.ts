@@ -277,3 +277,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(999)],
         wallet1
       );
+
+      expect(result).toBeOk(Cl.none());
+    });
+  });
