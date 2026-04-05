@@ -266,3 +266,6 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(1)],
         wallet1
       );
+
+      expect(result).toBeOk(Cl.some(Cl.principal(wallet1)));
+    });
