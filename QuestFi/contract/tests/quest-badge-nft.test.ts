@@ -111,3 +111,11 @@ describe("Quest Badge NFT Contract", () => {
         )
       );
     });
+    
+    it("increments protocol badge count", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("stackingdao")],
+        wallet1
+      );
