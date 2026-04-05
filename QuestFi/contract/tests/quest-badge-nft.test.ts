@@ -99,3 +99,15 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(1)],
         wallet1
       );
+
+      expect(result).toBeOk(
+        Cl.some(
+          Cl.tuple({
+            protocol: Cl.stringAscii("zest"),
+            owner: Cl.principal(wallet1),
+            "completion-date": Cl.uint(simnet.blockHeight),
+            "xp-earned": Cl.uint(50)
+          })
+        )
+      );
+    });
