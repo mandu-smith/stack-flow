@@ -20,3 +20,17 @@ describe("Quest Badge NFT Contract", () => {
           [Cl.stringAscii(protocol)],
           wallet1
         );
+
+        expect(result).toBeOk(
+          Cl.some(
+            Cl.tuple({
+              active: Cl.bool(true),
+              "xp-reward": Cl.uint(protocol === "granite" ? 70 :
+                                   protocol === "hermetica" ? 65 :
+                                   protocol === "stackingdao" ? 60 :
+                                   protocol === "arkadiko" ? 55 : 50)
+            })
+          )
+        );
+      });
+    });
