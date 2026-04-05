@@ -246,3 +246,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("zest")],
         wallet1
       );
+
+      expect(result).toBeErr(Cl.uint(105)); // ERR_INVALID_QUEST
+    });
+  });
