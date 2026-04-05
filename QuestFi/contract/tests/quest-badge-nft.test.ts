@@ -331,8 +331,6 @@ describe("Quest Badge NFT Contract", () => {
         wallet1
       );
 
-      ;
-
       const { result } = simnet.callReadOnlyFn(
         "quest-badge-nft",
         "has-completed-protocol",
@@ -340,7 +338,10 @@ describe("Quest Badge NFT Contract", () => {
         wallet1
       );
 
-      it("returns false when user has not completed protocol", () => {
+      expect(result).toBeOk(Cl.bool(true));
+    });
+
+    it("returns false when user has not completed protocol", () => {
       const { result } = simnet.callReadOnlyFn(
         "quest-badge-nft",
         "has-completed-protocol",
@@ -509,6 +510,14 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("stackingdao")],
         wallet2
       );
+      expect(w2m1.result).toBeOk(Cl.uint(3));
+
+      const w2m2 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("zest")],
+        wallet2
+      );
       expect(w2m2.result).toBeOk(Cl.uint(4));
 
       // Wallet 3 mints hermetica
@@ -527,16 +536,6 @@ describe("Quest Badge NFT Contract", () => {
         [],
         wallet1
       );
-      expect(lastId.result).toBeOk(Cl.uint(5));
-
-      // Verify last token ID
-      const lastId = simnet.callReadOnlyFn(
-        "quest-badge-nft",
-        "get-last-token-id",
-        [],
-        wallet1
-      );
-
       expect(lastId.result).toBeOk(Cl.uint(5));
 
       // Verify protocol counts
@@ -565,6 +564,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("arkadiko")],
         wallet1
       );
+      expect(failed.result).toBeErr(Cl.uint(104));
 
       // Verify state wasn't corrupted
       const lastId = simnet.callReadOnlyFn(
@@ -636,3 +636,8 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(999)],
         wallet1
       );
+
+      expect(result).toBeOk(Cl.some(Cl.stringAscii("https://stxfinance.xyz/api/metadata/")));
+    });
+  });
+});
