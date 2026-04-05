@@ -360,3 +360,5 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("new-protocol"), Cl.bool(true), Cl.uint(100)],
         deployer
       );
+
+      expect(result).toBeOk(Cl.bool(true));
