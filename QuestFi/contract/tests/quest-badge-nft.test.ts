@@ -362,3 +362,11 @@ describe("Quest Badge NFT Contract", () => {
       );
 
       expect(result).toBeOk(Cl.bool(true));
+
+      // Verify protocol was added
+      const info = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-protocol-info",
+        [Cl.stringAscii("new-protocol")],
+        wallet1
+      );
