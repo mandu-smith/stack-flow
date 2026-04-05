@@ -470,3 +470,11 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(uri.result).toBeOk(Cl.some(Cl.stringAscii(newUri)));
     });
+
+    it("prevents non-owner from setting token URI", () => {
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "set-base-token-uri",
+        [Cl.stringAscii("https://hacker.com/")],
+        wallet1
+      );
