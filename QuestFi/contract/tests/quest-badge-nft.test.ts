@@ -447,3 +447,13 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeErr(Cl.uint(100)); // ERR_OWNER_ONLY
     });
   });
+
+  describe("Admin Functions - Token URI", () => {
+    it("allows owner to set base token URI", () => {
+      const newUri = "https://newdomain.com/metadata/";
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "set-base-token-uri",
+        [Cl.stringAscii(newUri)],
+        deployer
+      );
