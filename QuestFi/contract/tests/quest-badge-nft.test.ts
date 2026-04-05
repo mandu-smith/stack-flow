@@ -548,3 +548,12 @@ describe("Quest Badge NFT Contract", () => {
       );
       expect(zestCount.result).toBeOk(Cl.uint(2));
     });
+
+    it("maintains correct state after failed minting attempts", () => {
+      // Successful mint
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("arkadiko")],
+        wallet1
+      );
