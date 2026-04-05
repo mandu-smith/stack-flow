@@ -565,3 +565,12 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("arkadiko")],
         wallet1
       );
+
+      // Verify state wasn't corrupted
+      const lastId = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-last-token-id",
+        [],
+        wallet1
+      );
+      expect(lastId.result).toBeOk(Cl.uint(1)); // Still 1, not 2
