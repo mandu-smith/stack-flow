@@ -605,3 +605,14 @@ describe("Quest Badge NFT Contract", () => {
         );
         expect(completed.result).toBeOk(Cl.bool(true));
       });
+
+      // Verify total count
+      const lastId = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-last-token-id",
+        [],
+        wallet1
+      );
+      expect(lastId.result).toBeOk(Cl.uint(5));
+    });
+  });
