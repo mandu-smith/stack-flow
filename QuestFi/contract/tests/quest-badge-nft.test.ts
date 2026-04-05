@@ -510,3 +510,12 @@ describe("Quest Badge NFT Contract", () => {
         wallet2
       );
       expect(w2m2.result).toBeOk(Cl.uint(4));
+
+      // Wallet 3 mints hermetica
+      const w3m1 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("hermetica")],
+        wallet3
+      );
+      expect(w3m1.result).toBeOk(Cl.uint(5));
