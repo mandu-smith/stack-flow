@@ -388,3 +388,5 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("zest"), Cl.bool(true), Cl.uint(75)],
         deployer
       );
+
+      expect(result).toBeOk(Cl.bool(true));
