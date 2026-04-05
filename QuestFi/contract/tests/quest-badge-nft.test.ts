@@ -205,3 +205,11 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(result).toBeOk(Cl.some(Cl.uint(1)));
     });
+
+    it("returns none for non-existent user-protocol badge", () => {
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-user-badge",
+        [Cl.principal(wallet1), Cl.stringAscii("zest")],
+        wallet1
+      );
