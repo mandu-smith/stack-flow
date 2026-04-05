@@ -628,3 +628,11 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(result).toBeOk(Cl.some(Cl.stringAscii("https://stxfinance.xyz/api/metadata/")));
     });
+
+    it("returns base URI even for non-existent token", () => {
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-token-uri",
+        [Cl.uint(999)],
+        wallet1
+      );
