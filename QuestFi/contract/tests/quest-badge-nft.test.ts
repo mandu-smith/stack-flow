@@ -467,3 +467,6 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(1)],
         wallet1
       );
+
+      expect(uri.result).toBeOk(Cl.some(Cl.stringAscii(newUri)));
+    });
