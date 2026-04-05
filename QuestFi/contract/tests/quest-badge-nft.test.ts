@@ -177,3 +177,13 @@ describe("Quest Badge NFT Contract", () => {
         wallet1
       );
       expect(mint1.result).toBeOk(Cl.uint(1));
+
+      // Second mint fails with ERR_ALREADY_CLAIMED
+      const mint2 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("hermetica")],
+        wallet1
+      );
+      expect(mint2.result).toBeErr(Cl.uint(104)); // ERR_ALREADY_CLAIMED
+    });
