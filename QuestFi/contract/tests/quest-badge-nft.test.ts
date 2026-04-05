@@ -519,3 +519,12 @@ describe("Quest Badge NFT Contract", () => {
         wallet3
       );
       expect(w3m1.result).toBeOk(Cl.uint(5));
+
+      // Verify last token ID
+      const lastId = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-last-token-id",
+        [],
+        wallet1
+      );
+      expect(lastId.result).toBeOk(Cl.uint(5));
