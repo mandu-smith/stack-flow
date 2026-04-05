@@ -217,3 +217,12 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeOk(Cl.none());
     });
   });
+
+  describe("Invalid Protocol Handling", () => {
+    it("rejects minting for non-existent protocol", () => {
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("invalid-protocol")],
+        wallet1
+      );
