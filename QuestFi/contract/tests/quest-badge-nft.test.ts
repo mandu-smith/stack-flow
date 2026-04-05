@@ -317,3 +317,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.uint(1), Cl.principal(wallet1), Cl.principal(wallet2)],
         deployer
       );
+
+      expect(result).toBeErr(Cl.uint(103)); // ERR_UNAUTHORIZED
+    });
+  });
