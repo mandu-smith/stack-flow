@@ -281,3 +281,13 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeOk(Cl.none());
     });
   });
+
+  describe("Soul-Bound Transfer Prevention", () => {
+    it("prevents transfer of badges (soul-bound)", () => {
+      // Mint badge first
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("granite")],
+        wallet1
+      );
