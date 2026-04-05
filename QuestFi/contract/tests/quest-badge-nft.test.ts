@@ -380,3 +380,11 @@ describe("Quest Badge NFT Contract", () => {
         )
       );
     });
+
+    it("allows owner to update existing protocol", () => {
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "set-protocol",
+        [Cl.stringAscii("zest"), Cl.bool(true), Cl.uint(75)],
+        deployer
+      );
