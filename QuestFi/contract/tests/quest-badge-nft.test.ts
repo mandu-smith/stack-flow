@@ -34,3 +34,13 @@ describe("Quest Badge NFT Contract", () => {
         );
       });
     });
+
+    it("starts with last-token-id at 0", () => {
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-last-token-id",
+        [],
+        wallet1
+      );
+      expect(result).toBeOk(Cl.uint(0));
+    });
