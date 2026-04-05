@@ -229,3 +229,12 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(result).toBeErr(Cl.uint(105)); // ERR_INVALID_QUEST
     });
+
+    it("rejects minting for inactive protocol", () => {
+      // First deactivate a protocol
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "set-protocol",
+        [Cl.stringAscii("zest"), Cl.bool(false), Cl.uint(50)],
+        deployer
+      );
