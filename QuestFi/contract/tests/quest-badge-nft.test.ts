@@ -616,3 +616,12 @@ describe("Quest Badge NFT Contract", () => {
       expect(lastId.result).toBeOk(Cl.uint(5));
     });
   });
+
+  describe("Token URI Behavior", () => {
+    it("returns base URI for any token when URI is set", () => {
+      const { result } = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-token-uri",
+        [Cl.uint(1)],
+        wallet1
+      );
