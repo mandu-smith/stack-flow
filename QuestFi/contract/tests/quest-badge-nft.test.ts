@@ -12,3 +12,11 @@ describe("Quest Badge NFT Contract", () => {
   describe("Initialization", () => {
     it("initializes with 5 default protocols", () => {
       const protocols = ["zest", "stackingdao", "granite", "hermetica", "arkadiko"];
+
+      protocols.forEach(protocol => {
+        const { result } = simnet.callReadOnlyFn(
+          "quest-badge-nft",
+          "get-protocol-info",
+          [Cl.stringAscii(protocol)],
+          wallet1
+        );
