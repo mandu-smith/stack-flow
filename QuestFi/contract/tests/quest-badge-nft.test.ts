@@ -416,3 +416,5 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("arkadiko"), Cl.bool(false), Cl.uint(55)],
         deployer
       );
+
+      expect(result).toBeOk(Cl.bool(true));
