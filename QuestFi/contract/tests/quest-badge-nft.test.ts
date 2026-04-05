@@ -478,3 +478,7 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("https://hacker.com/")],
         wallet1
       );
+
+      expect(result).toBeErr(Cl.uint(100)); // ERR_OWNER_ONLY
+    });
+  });
