@@ -509,3 +509,4 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("stackingdao")],
         wallet2
       );
+      expect(w2m2.result).toBeOk(Cl.uint(4));
