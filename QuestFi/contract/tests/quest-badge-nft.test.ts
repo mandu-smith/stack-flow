@@ -310,3 +310,10 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("arkadiko")],
         wallet1
       );
+
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "transfer",
+        [Cl.uint(1), Cl.principal(wallet1), Cl.principal(wallet2)],
+        deployer
+      );
