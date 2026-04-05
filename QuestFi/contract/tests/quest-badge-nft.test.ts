@@ -166,3 +166,14 @@ describe("Quest Badge NFT Contract", () => {
       expect(mint2.result).toBeOk(Cl.uint(2));
     });
   });
+
+  describe("Duplicate Prevention", () => {
+    it("prevents user from minting same protocol badge twice", () => {
+      // First mint succeeds
+      const mint1 = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("hermetica")],
+        wallet1
+      );
+      expect(mint1.result).toBeOk(Cl.uint(1));
