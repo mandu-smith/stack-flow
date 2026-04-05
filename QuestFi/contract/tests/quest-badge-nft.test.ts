@@ -557,3 +557,11 @@ describe("Quest Badge NFT Contract", () => {
         [Cl.stringAscii("arkadiko")],
         wallet1
       );
+
+      // Failed duplicate mint
+      const failed = simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("arkadiko")],
+        wallet1
+      );
