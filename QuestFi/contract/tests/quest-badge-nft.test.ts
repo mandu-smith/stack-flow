@@ -67,3 +67,11 @@ describe("Quest Badge NFT Contract", () => {
 
       expect(result).toBeOk(Cl.uint(1));
     });
+
+    it("increments last-token-id after minting", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("zest")],
+        wallet1
+      );
