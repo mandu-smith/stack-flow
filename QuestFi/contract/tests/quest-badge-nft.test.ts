@@ -351,3 +351,12 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeOk(Cl.bool(false));
     });
   });
+
+  describe("Admin Functions - Protocol Management", () => {
+    it("allows owner to add new protocol", () => {
+      const { result } = simnet.callPublicFn(
+        "quest-badge-nft",
+        "set-protocol",
+        [Cl.stringAscii("new-protocol"), Cl.bool(true), Cl.uint(100)],
+        deployer
+      );
