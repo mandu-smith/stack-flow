@@ -459,3 +459,11 @@ describe("Quest Badge NFT Contract", () => {
       );
 
       expect(result).toBeOk(Cl.bool(true));
+
+      // Verify URI was updated
+      const uri = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-token-uri",
+        [Cl.uint(1)],
+        wallet1
+      );
