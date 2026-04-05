@@ -595,3 +595,13 @@ describe("Quest Badge NFT Contract", () => {
           wallet1
         );
         expect(mint.result).toBeOk(Cl.uint(index + 1));
+
+        // Verify completion
+        const completed = simnet.callReadOnlyFn(
+          "quest-badge-nft",
+          "has-completed-protocol",
+          [Cl.principal(wallet1), Cl.stringAscii(protocol)],
+          wallet1
+        );
+        expect(completed.result).toBeOk(Cl.bool(true));
+      });
