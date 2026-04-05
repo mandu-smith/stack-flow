@@ -418,3 +418,10 @@ describe("Quest Badge NFT Contract", () => {
       );
 
       expect(result).toBeOk(Cl.bool(true));
+
+      const info = simnet.callReadOnlyFn(
+        "quest-badge-nft",
+        "get-protocol-info",
+        [Cl.stringAscii("arkadiko")],
+        wallet1
+      );
