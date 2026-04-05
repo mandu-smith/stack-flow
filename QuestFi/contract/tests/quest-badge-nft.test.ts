@@ -321,3 +321,12 @@ describe("Quest Badge NFT Contract", () => {
       expect(result).toBeErr(Cl.uint(103)); // ERR_UNAUTHORIZED
     });
   });
+
+  describe("Quest Completion Checks", () => {
+    it("returns true when user has completed protocol", () => {
+      simnet.callPublicFn(
+        "quest-badge-nft",
+        "mint-badge",
+        [Cl.stringAscii("hermetica")],
+        wallet1
+      );
