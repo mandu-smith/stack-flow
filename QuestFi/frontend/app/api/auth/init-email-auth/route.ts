@@ -7,3 +7,7 @@ const turnkeyClient = new Turnkey({
   apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY!,
   defaultOrganizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
 })
+
+export async function POST(req: NextRequest) {
+  try {
+    const { email, targetPublicKey } = await req.json()
