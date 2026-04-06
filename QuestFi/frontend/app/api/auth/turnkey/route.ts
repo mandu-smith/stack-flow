@@ -46,3 +46,12 @@ export async function POST(req: NextRequest) {
       if (!userId || !apiKeyId) {
         throw new Error('Email auth initialization failed')
       }
+
+      return NextResponse.json({
+        success: true,
+        userId,
+        apiKeyId,
+        organizationId: suborgID || process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
+        message: 'Email sent successfully. Check your inbox.',
+      })
+    }
