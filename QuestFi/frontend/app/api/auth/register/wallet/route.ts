@@ -71,3 +71,5 @@ export async function POST(req: NextRequest) {
       completedQuests: [],
       badges: [],
     }
+
+    const result = await usersCollection.insertOne(newUser)
