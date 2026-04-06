@@ -21,3 +21,10 @@ export async function GET(request: NextRequest) {
         `${request.nextUrl.origin}/?auth_error=${encodeURIComponent(error)}`
       )
     }
+
+    if (!code) {
+      return NextResponse.json(
+        { success: false, message: 'Authorization code not provided' },
+        { status: 400 }
+      )
+    }
