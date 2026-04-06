@@ -53,3 +53,11 @@ export async function POST(req: NextRequest) {
 
     // Find user by wallet address
     const user = await usersCollection.findOne({ walletAddress: address })
+
+    if (!user) {
+      console.log('❌ User not found - challenge preserved for registration')
+      return NextResponse.json(
+        { success: false, error: 'User not found. Please register first.' },
+        { status: 404 }
+      )
+    }
