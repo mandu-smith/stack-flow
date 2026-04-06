@@ -12,3 +12,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { filterType, filterValue } = body
+
+    if (!filterType || !filterValue) {
+      return NextResponse.json(
+        { success: false, message: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
