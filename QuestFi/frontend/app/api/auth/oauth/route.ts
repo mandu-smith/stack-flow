@@ -31,3 +31,10 @@ export async function POST(request: NextRequest) {
 
     let subOrganizationId: string
     let wallet: any
+
+    if (getSuborgsResponse.organizationIds.length > 0) {
+      // User already exists
+      subOrganizationId = getSuborgsResponse.organizationIds[0]
+    } else {
+      // Create new sub-organization for first-time user
+      const subOrgName = `OAuth-User-${Date.now()}`
