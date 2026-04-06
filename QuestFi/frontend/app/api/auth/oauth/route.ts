@@ -84,3 +84,9 @@ export async function POST(request: NextRequest) {
     // Calculate what Turnkey expects
     const crypto = require('crypto')
     const expectedNonce = crypto.createHash('sha256').update(Buffer.from(publicKey, 'hex')).digest('hex')
+
+    console.log('OAuth Login Debug:')
+    console.log('- Public Key:', publicKey)
+    console.log('- Nonce in Token:', nonceInToken)
+    console.log('- Expected Nonce (sha256 of pubkey):', expectedNonce)
+    console.log('- Match:', nonceInToken === expectedNonce)
