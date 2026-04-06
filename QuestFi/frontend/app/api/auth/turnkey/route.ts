@@ -62,3 +62,13 @@ export async function POST(req: NextRequest) {
     )
   } catch (error) {
     console.error('Turnkey auth error:', error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: error instanceof Error ? error.message : 'Authentication failed',
+      },
+      { status: 500 }
+    )
+  }
+}
