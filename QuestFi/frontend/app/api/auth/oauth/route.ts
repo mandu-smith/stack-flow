@@ -7,3 +7,8 @@ const turnkeyClient = new Turnkey({
   apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY!,
   defaultOrganizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
 })
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { oidcToken, publicKey, providerName = 'Google' } = body
