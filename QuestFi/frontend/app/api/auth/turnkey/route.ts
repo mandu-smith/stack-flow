@@ -102,3 +102,11 @@ export async function PUT(req: NextRequest) {
       ],
       rootQuorumThreshold: 1,
     })
+
+    return NextResponse.json({
+      success: true,
+      subOrganizationId: suborgResponse.subOrganizationId,
+      message: 'Sub-organization created successfully',
+    })
+  } catch (error) {
+    console.error('Sub-organization creation error:', error)
