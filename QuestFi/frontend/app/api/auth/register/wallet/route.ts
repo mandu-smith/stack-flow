@@ -87,3 +87,11 @@ export async function POST(req: NextRequest) {
         createdAt: newUser.createdAt,
       },
     })
+  } catch (error) {
+    console.error('Wallet registration error:', error)
+    return NextResponse.json(
+      { success: false, error: 'Registration failed' },
+      { status: 500 }
+    )
+  }
+}
