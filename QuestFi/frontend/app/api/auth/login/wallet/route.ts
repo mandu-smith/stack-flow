@@ -75,3 +75,11 @@ export async function POST(req: NextRequest) {
         createdAt: user.createdAt,
       },
     })
+  } catch (error) {
+    console.error('Wallet login error:', error)
+    return NextResponse.json(
+      { success: false, error: 'Login failed' },
+      { status: 500 }
+    )
+  }
+}
