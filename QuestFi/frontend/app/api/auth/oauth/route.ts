@@ -102,3 +102,11 @@ export async function POST(request: NextRequest) {
     if (!session) {
       throw new Error('Session not available')
     }
+
+    return NextResponse.json({
+      success: true,
+      session,
+      subOrganizationId,
+      wallet,
+      isNewUser: getSuborgsResponse.organizationIds.length === 0,
+    })
