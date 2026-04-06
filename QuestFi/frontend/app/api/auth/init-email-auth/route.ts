@@ -18,3 +18,5 @@ export async function POST(req: NextRequest) {
       targetPublicKey,
       organizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
     })
+
+    const { userId, apiKeyId } = response
