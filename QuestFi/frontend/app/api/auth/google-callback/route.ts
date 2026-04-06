@@ -43,3 +43,9 @@ export async function GET(request: NextRequest) {
         grant_type: 'authorization_code',
       }),
     })
+
+    if (!tokenResponse.ok) {
+      const errorData = await tokenResponse.json()
+      console.error('Token exchange error:', errorData)
+      throw new Error(`Failed to exchange code: ${errorData.error_description || errorData.error}`)
+    }
