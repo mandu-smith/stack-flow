@@ -55,3 +55,16 @@ export async function POST(request: NextRequest) {
             ],
           },
         ],
+
+        wallet: {
+          walletName: 'Default Wallet',
+          accounts: [
+            {
+              curve: 'CURVE_SECP256K1',
+              pathFormat: 'PATH_FORMAT_BIP32',
+              path: "m/44'/5757'/0'/0/0",
+              addressFormat: 'ADDRESS_FORMAT_COMPRESSED',
+            },
+          ],
+        },
+      }
