@@ -37,3 +37,6 @@ export async function POST(request: NextRequest) {
     )
 
     console.log('[ADMIN] Reset user:', suborgId, 'Modified:', result.modifiedCount)
+
+    // Fetch updated user
+    const user = await collection.findOne({ suborgId })
