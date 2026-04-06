@@ -49,3 +49,7 @@ export async function GET(request: NextRequest) {
       console.error('Token exchange error:', errorData)
       throw new Error(`Failed to exchange code: ${errorData.error_description || errorData.error}`)
     }
+
+    const tokens = await tokenResponse.json()
+    console.log('Token exchange successful, nonce present:', !!tokens.id_token)
+    const idToken = tokens.id_token
