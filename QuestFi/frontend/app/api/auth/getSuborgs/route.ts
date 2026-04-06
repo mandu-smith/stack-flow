@@ -19,3 +19,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Get sub-organizations based on filter
+    const response = await turnkeyClient.apiClient().getSubOrgIds({
+      filterType,
+      filterValue,
+    })
