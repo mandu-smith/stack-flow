@@ -28,3 +28,6 @@ export async function POST(request: NextRequest) {
       filterType: 'OIDC_TOKEN',
       filterValue: oidcToken,
     })
+
+    let subOrganizationId: string
+    let wallet: any
