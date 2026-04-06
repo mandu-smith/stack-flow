@@ -38,3 +38,10 @@ export async function POST(req: NextRequest) {
       publicKey,
       walletType: 'stacks'
     })
+
+    if (!isValid) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid signature' },
+        { status: 401 }
+      )
+    }
