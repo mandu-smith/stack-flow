@@ -90,3 +90,9 @@ export async function POST(request: NextRequest) {
     console.log('- Nonce in Token:', nonceInToken)
     console.log('- Expected Nonce (sha256 of pubkey):', expectedNonce)
     console.log('- Match:', nonceInToken === expectedNonce)
+
+    const oauthLoginResponse = await turnkeyClient.apiClient().oauthLogin({
+      oidcToken,
+      publicKey,
+      organizationId: subOrganizationId,
+    })
