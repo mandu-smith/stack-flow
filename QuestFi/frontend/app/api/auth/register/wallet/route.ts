@@ -50,3 +50,6 @@ export async function POST(req: NextRequest) {
     const client = await getClientPromise()
     const db = client.db('QuestFi')
     const usersCollection = db.collection('users')
+
+    // Check if user already exists
+    const existingUser = await usersCollection.findOne({ walletAddress: address })
