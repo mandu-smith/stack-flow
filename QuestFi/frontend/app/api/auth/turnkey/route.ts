@@ -110,3 +110,13 @@ export async function PUT(req: NextRequest) {
     })
   } catch (error) {
     console.error('Sub-organization creation error:', error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to create sub-organization',
+      },
+      { status: 500 }
+    )
+  }
+}
