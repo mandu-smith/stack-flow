@@ -73,3 +73,10 @@ export async function POST(request: NextRequest) {
       subOrganizationId = createResponse.subOrganizationId
       wallet = createResponse.wallet
     }
+
+    // Now authenticate with OAuth to get session
+    // Note: Turnkey will verify that nonce in token matches sha256(publicKey)
+
+    // Decode the nonce from the token to verify
+    const tokenPayload = JSON.parse(Buffer.from(oidcToken.split('.')[1], 'base64').toString())
+    const nonceInToken = tokenPayload.nonce
