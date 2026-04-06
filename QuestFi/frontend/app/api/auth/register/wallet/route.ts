@@ -60,3 +60,14 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       )
     }
+
+    // Create new user
+    const newUser = {
+      walletAddress: address,
+      publicKey,
+      createdAt: new Date().toISOString(),
+      level: 1,
+      totalXP: 0,
+      completedQuests: [],
+      badges: [],
+    }
