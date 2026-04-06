@@ -25,3 +25,16 @@ export async function POST(request: NextRequest) {
       filterType,
       filterValue,
     })
+
+    return NextResponse.json({
+      success: true,
+      organizationIds: response.organizationIds,
+    })
+  } catch (error: any) {
+    console.error('Get suborgs error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message || 'Failed to get sub-organizations' },
+      { status: 500 }
+    )
+  }
+}
