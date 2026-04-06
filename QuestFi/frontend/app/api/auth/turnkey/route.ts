@@ -55,3 +55,9 @@ export async function POST(req: NextRequest) {
         message: 'Email sent successfully. Check your inbox.',
       })
     }
+
+    return NextResponse.json(
+      { success: false, message: 'Invalid authentication type' },
+      { status: 400 }
+    )
+  } catch (error) {
