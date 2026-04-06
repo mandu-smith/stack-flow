@@ -61,3 +61,4 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     )
   } catch (error) {
+    console.error('Turnkey auth error:', error)
