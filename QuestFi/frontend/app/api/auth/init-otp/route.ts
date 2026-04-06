@@ -19,3 +19,10 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Initialize OTP - sends OTP to user's email/phone
+    const response = await turnkeyClient.apiClient().initOtp({
+      contact,
+      otpType,
+      userIdentifier,
+    })
