@@ -19,3 +19,13 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Validate challenge (but don't consume it yet - might need it for registration)
+    const isChallengeValid = await validateChallenge(address, message, false)
+    if (!isChallengeValid) {
+      console.log('❌ Challenge validation failed')
+      return NextResponse.json(
+        { success: false, error: 'Invalid or expired challenge' },
+        { status: 401 }
+      )
+    }
