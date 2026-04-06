@@ -85,3 +85,5 @@ export async function PUT(req: NextRequest) {
         { status: 400 }
       )
     }
+
+    const turnkeyClient = getTurnkeyClient()
