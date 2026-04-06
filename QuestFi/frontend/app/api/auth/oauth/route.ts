@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
             ],
           },
         ],
-
         wallet: {
           walletName: 'Default Wallet',
           accounts: [
@@ -110,3 +109,11 @@ export async function POST(request: NextRequest) {
       wallet,
       isNewUser: getSuborgsResponse.organizationIds.length === 0,
     })
+  } catch (error: any) {
+    console.error('OAuth error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message || 'OAuth authentication failed' },
+      { status: 500 }
+    )
+  }
+}
