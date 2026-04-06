@@ -26,3 +26,16 @@ export async function POST(request: NextRequest) {
       otpType,
       userIdentifier,
     })
+
+    return NextResponse.json({
+      success: true,
+      otpId: response.otpId,
+    })
+  } catch (error: any) {
+    console.error('Init OTP error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message || 'Failed to initialize OTP' },
+      { status: 500 }
+    )
+  }
+}
