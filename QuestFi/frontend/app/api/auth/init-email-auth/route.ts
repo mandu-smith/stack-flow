@@ -11,3 +11,10 @@ const turnkeyClient = new Turnkey({
 export async function POST(req: NextRequest) {
   try {
     const { email, targetPublicKey } = await req.json()
+
+    // Initialize Email Auth (sends magic link for passkey registration)
+    const response = await turnkeyClient.apiClient().emailAuth({
+      email,
+      targetPublicKey,
+      organizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
+    })
