@@ -13,3 +13,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    const client = await getClientPromise()
+    const db = client.db('QuestFi')
+    const collection = db.collection('userProfiles')
