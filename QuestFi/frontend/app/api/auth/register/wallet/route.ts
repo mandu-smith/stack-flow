@@ -29,3 +29,12 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       )
     }
+
+    // Verify wallet signature (address-based verification)
+    const isValid = verifyWalletSignature({
+      address,
+      signature,
+      message,
+      publicKey,
+      walletType: 'stacks'
+    })
