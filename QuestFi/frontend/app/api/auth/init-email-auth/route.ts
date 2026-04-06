@@ -20,3 +20,17 @@ export async function POST(req: NextRequest) {
     })
 
     const { userId, apiKeyId } = response
+
+    return NextResponse.json({
+      success: true,
+      userId,
+      apiKeyId,
+    })
+  } catch (error: any) {
+    console.error('Init Email Auth error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message || 'Failed to send email auth link' },
+      { status: 500 }
+    )
+  }
+}
