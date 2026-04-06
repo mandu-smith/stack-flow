@@ -72,3 +72,16 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+
+// Create sub-organization for new users
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json()
+    const { email, username } = body
+
+    if (!email) {
+      return NextResponse.json(
+        { success: false, message: 'Email is required' },
+        { status: 400 }
+      )
+    }
