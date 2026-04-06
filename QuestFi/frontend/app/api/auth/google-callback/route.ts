@@ -53,3 +53,7 @@ export async function GET(request: NextRequest) {
     const tokens = await tokenResponse.json()
     console.log('Token exchange successful, nonce present:', !!tokens.id_token)
     const idToken = tokens.id_token
+
+    if (!idToken) {
+      throw new Error('No ID token received from Google')
+    }
