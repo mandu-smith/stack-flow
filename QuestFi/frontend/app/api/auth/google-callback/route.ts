@@ -87,3 +87,12 @@ export async function GET(request: NextRequest) {
         // Invalid state, ignore
       }
     }
+
+    return NextResponse.redirect(returnUrl.toString())
+  } catch (error: any) {
+    console.error('Google callback error:', error)
+    return NextResponse.redirect(
+      `${request.nextUrl.origin}/?auth_error=${encodeURIComponent(error.message)}`
+    )
+  }
+}
