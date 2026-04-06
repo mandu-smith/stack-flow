@@ -53,3 +53,10 @@ export async function POST(req: NextRequest) {
 
     // Check if user already exists
     const existingUser = await usersCollection.findOne({ walletAddress: address })
+
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, error: 'User already exists. Please login.' },
+        { status: 409 }
+      )
+    }
