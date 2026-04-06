@@ -49,8 +49,17 @@ export async function POST(request: NextRequest) {
     }
 
     const response = await turnkeyClient.apiClient().createSubOrganization(createSubOrgParams)
+
     return NextResponse.json({
       success: true,
       subOrganizationId: response.subOrganizationId,
       wallet: response.wallet,
     })
+  } catch (error: any) {
+    console.error('Create suborg error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message || 'Failed to create sub-organization' },
+      { status: 500 }
+    )
+  }
+}
