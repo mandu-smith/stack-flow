@@ -22,3 +22,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Check if user already has a sub-organization
+    const getSuborgsResponse = await turnkeyClient.apiClient().getSubOrgIds({
+      filterType: 'OIDC_TOKEN',
+      filterValue: oidcToken,
+    })
