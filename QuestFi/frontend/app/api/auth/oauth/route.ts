@@ -12,3 +12,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { oidcToken, publicKey, providerName = 'Google' } = body
+
+    console.log('OAuth request - publicKey:', publicKey)
+    console.log('OAuth request - oidcToken length:', oidcToken?.length)
