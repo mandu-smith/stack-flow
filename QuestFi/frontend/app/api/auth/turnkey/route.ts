@@ -15,3 +15,10 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { email, type, targetPublicKey, suborgID } = body
+
+    if (!email) {
+      return NextResponse.json(
+        { success: false, message: 'Email is required' },
+        { status: 400 }
+      )
+    }
