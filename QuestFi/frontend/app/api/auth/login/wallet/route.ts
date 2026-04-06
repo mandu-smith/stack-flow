@@ -45,3 +45,8 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       )
     }
+
+    // Connect to MongoDB
+    const client = await getClientPromise()
+    const db = client.db('QuestFi')
+    const usersCollection = db.collection('users')
