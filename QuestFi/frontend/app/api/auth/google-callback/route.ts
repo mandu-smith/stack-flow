@@ -7,3 +7,10 @@ const turnkeyClient = new Turnkey({
   apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY!,
   defaultOrganizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
 })
+
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams
+    const code = searchParams.get('code')
+    const state = searchParams.get('state')
+    const error = searchParams.get('error')
