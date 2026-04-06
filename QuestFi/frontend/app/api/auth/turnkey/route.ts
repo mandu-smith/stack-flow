@@ -22,3 +22,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+
+    if (!targetPublicKey) {
+      return NextResponse.json(
+        { success: false, message: 'Target public key is required' },
+        { status: 400 }
+      )
+    }
