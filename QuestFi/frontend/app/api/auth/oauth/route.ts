@@ -98,3 +98,7 @@ export async function POST(request: NextRequest) {
     })
 
     const { session } = oauthLoginResponse
+
+    if (!session) {
+      throw new Error('Session not available')
+    }
