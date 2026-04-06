@@ -64,3 +64,9 @@ export async function GET(request: NextRequest) {
     )
     const userEmail = payload.email
     const nonceInToken = payload.nonce
+
+    console.log('Token payload:', {
+      email: userEmail,
+      nonce: nonceInToken,
+      hasNonce: !!nonceInToken
+    })
