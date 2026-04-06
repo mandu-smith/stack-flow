@@ -12,3 +12,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { email, oauthProviders, authenticators } = body
+
+    if (!email) {
+      return NextResponse.json(
+        { success: false, message: 'Email is required' },
+        { status: 400 }
+      )
+    }
