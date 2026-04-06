@@ -77,3 +77,13 @@ export async function POST(req: NextRequest) {
     // Registration successful - consume the challenge
     await consumeChallenge(address)
     console.log('✅ User registered successfully, challenge consumed')
+
+    return NextResponse.json({
+      success: true,
+      message: 'Registration successful',
+      user: {
+        id: result.insertedId,
+        walletAddress: newUser.walletAddress,
+        createdAt: newUser.createdAt,
+      },
+    })
