@@ -73,3 +73,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await usersCollection.insertOne(newUser)
+
+    // Registration successful - consume the challenge
+    await consumeChallenge(address)
+    console.log('✅ User registered successfully, challenge consumed')
