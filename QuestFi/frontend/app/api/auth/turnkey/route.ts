@@ -40,3 +40,5 @@ export async function POST(req: NextRequest) {
         organizationId: suborgID || process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
         invalidateExisting: true,
       })
+
+      const { userId, apiKeyId } = emailAuthResponse
