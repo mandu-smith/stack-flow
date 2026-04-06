@@ -31,3 +31,12 @@ export async function POST(req: NextRequest) {
     }
 
     const turnkeyClient = getTurnkeyClient()
+
+    if (type === 'email') {
+      // Initialize email authentication
+      const emailAuthResponse = await turnkeyClient.apiClient().emailAuth({
+        email,
+        targetPublicKey,
+        organizationId: suborgID || process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
+        invalidateExisting: true,
+      })
