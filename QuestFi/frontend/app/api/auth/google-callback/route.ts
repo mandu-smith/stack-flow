@@ -14,3 +14,10 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
     const error = searchParams.get('error')
+
+    // Handle error from Google
+    if (error) {
+      return NextResponse.redirect(
+        `${request.nextUrl.origin}/?auth_error=${encodeURIComponent(error)}`
+      )
+    }
