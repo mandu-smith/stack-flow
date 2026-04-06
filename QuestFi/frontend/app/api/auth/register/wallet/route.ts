@@ -12,3 +12,10 @@ export async function POST(req: NextRequest) {
     console.log('📝 Message:', message)
     console.log('🔏 Signature:', signature)
     console.log('🔑 Public Key:', publicKey)
+
+    if (!address || !signature || !message || !publicKey) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
