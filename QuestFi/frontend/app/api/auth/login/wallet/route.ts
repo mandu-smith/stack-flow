@@ -61,3 +61,6 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       )
     }
+
+    // User found - consume the challenge
+    await consumeChallenge(address)
