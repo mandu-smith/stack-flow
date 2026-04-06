@@ -87,3 +87,18 @@ export async function PUT(req: NextRequest) {
     }
 
     const turnkeyClient = getTurnkeyClient()
+
+    // Create a sub-organization for the user
+    const suborgResponse = await turnkeyClient.apiClient().createSubOrganization({
+      subOrganizationName: username || email,
+      rootUsers: [
+        {
+          userName: username || email,
+          userEmail: email,
+          apiKeys: [],
+          authenticators: [],
+          oauthProviders: [],
+        },
+      ],
+      rootQuorumThreshold: 1,
+    })
