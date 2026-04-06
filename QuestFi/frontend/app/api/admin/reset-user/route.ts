@@ -17,3 +17,21 @@ export async function POST(request: NextRequest) {
     const client = await getClientPromise()
     const db = client.db('QuestFi')
     const collection = db.collection('userProfiles')
+
+    const result = await collection.updateOne(
+      { suborgId },
+      {
+        $set: {
+          totalXP: 0,
+          level: 1,
+          rank: 0,
+          badgesEarned: 0,
+          streak: 0,
+          nextLevelXP: 100,
+          badges: [],
+          completedQuests: [],
+          achievements: [],
+          updatedAt: new Date()
+        }
+      }
+    )
