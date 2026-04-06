@@ -50,3 +50,6 @@ export async function POST(req: NextRequest) {
     const client = await getClientPromise()
     const db = client.db('QuestFi')
     const usersCollection = db.collection('users')
+
+    // Find user by wallet address
+    const user = await usersCollection.findOne({ walletAddress: address })
