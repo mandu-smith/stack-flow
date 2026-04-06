@@ -47,3 +47,5 @@ export async function POST(request: NextRequest) {
         ],
       },
     }
+
+    const response = await turnkeyClient.apiClient().createSubOrganization(createSubOrgParams)
