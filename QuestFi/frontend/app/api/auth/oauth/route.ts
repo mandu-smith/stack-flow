@@ -38,3 +38,20 @@ export async function POST(request: NextRequest) {
     } else {
       // Create new sub-organization for first-time user
       const subOrgName = `OAuth-User-${Date.now()}`
+
+      const createSubOrgParams: any = {
+        subOrganizationName: subOrgName,
+        rootQuorumThreshold: 1,
+        rootUsers: [
+          {
+            userName: subOrgName,
+            apiKeys: [],
+            authenticators: [],
+            oauthProviders: [
+              {
+                providerName,
+                oidcToken,
+              },
+            ],
+          },
+        ],
