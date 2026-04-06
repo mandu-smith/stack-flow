@@ -6,3 +6,9 @@ import { verifyWalletSignature } from '@/lib/wallet/wallet-auth'
 export async function POST(req: NextRequest) {
   try {
     const { address, signature, message, publicKey } = await req.json()
+
+    console.log('🔐 [Wallet Login] Verifying signature...')
+    console.log('📍 Address:', address)
+    console.log('📝 Message:', message)
+    console.log('🔏 Signature:', signature)
+    console.log('🔑 Public Key:', publicKey)
