@@ -76,3 +76,14 @@ export async function GET(request: NextRequest) {
     returnUrl.searchParams.set('google_auth', 'success')
     returnUrl.searchParams.set('id_token', idToken)
     returnUrl.searchParams.set('email', userEmail)
+
+    if (state) {
+      try {
+        const stateObj = JSON.parse(state)
+        if (stateObj.returnTo) {
+          returnUrl.pathname = stateObj.returnTo
+        }
+      } catch (e) {
+        // Invalid state, ignore
+      }
+    }
