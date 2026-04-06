@@ -7,3 +7,15 @@ const turnkeyClient = new Turnkey({
   apiPublicKey: process.env.TURNKEY_API_PUBLIC_KEY!,
   defaultOrganizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
 })
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { contact, userIdentifier, otpType = 'OTP_TYPE_EMAIL' } = body
+
+    if (!contact || !userIdentifier) {
+      return NextResponse.json(
+        { success: false, message: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
