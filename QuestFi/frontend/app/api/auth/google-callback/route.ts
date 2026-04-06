@@ -70,3 +70,9 @@ export async function GET(request: NextRequest) {
       nonce: nonceInToken,
       hasNonce: !!nonceInToken
     })
+
+    // Store tokens in URL to pass to frontend
+    const returnUrl = new URL(request.nextUrl.origin)
+    returnUrl.searchParams.set('google_auth', 'success')
+    returnUrl.searchParams.set('id_token', idToken)
+    returnUrl.searchParams.set('email', userEmail)
