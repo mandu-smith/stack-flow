@@ -96,3 +96,5 @@ export async function POST(request: NextRequest) {
       publicKey,
       organizationId: subOrganizationId,
     })
+
+    const { session } = oauthLoginResponse
