@@ -19,3 +19,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Create sub-organization for new user
+    const subOrgName = `User-${email}-${Date.now()}`
