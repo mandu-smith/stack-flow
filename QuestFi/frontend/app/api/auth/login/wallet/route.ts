@@ -64,3 +64,14 @@ export async function POST(req: NextRequest) {
 
     // User found - consume the challenge
     await consumeChallenge(address)
+
+    // Return success
+    return NextResponse.json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        walletAddress: user.walletAddress,
+        createdAt: user.createdAt,
+      },
+    })
