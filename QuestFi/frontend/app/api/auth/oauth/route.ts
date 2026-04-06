@@ -68,3 +68,8 @@ export async function POST(request: NextRequest) {
           ],
         },
       }
+
+      const createResponse = await turnkeyClient.apiClient().createSubOrganization(createSubOrgParams)
+      subOrganizationId = createResponse.subOrganizationId
+      wallet = createResponse.wallet
+    }
