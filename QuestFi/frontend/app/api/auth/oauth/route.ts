@@ -15,3 +15,10 @@ export async function POST(request: NextRequest) {
 
     console.log('OAuth request - publicKey:', publicKey)
     console.log('OAuth request - oidcToken length:', oidcToken?.length)
+
+    if (!oidcToken || !publicKey) {
+      return NextResponse.json(
+        { success: false, message: 'OIDC token and public key are required' },
+        { status: 400 }
+      )
+    }
