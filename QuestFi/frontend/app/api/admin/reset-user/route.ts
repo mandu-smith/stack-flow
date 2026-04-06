@@ -40,3 +40,17 @@ export async function POST(request: NextRequest) {
 
     // Fetch updated user
     const user = await collection.findOne({ suborgId })
+
+    return NextResponse.json({
+      success: true,
+      message: 'User reset successfully',
+      profile: user
+    })
+  } catch (error: any) {
+    console.error('Reset user error:', error)
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    )
+  }
+}
