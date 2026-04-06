@@ -42,3 +42,7 @@ export async function POST(req: NextRequest) {
       })
 
       const { userId, apiKeyId } = emailAuthResponse
+
+      if (!userId || !apiKeyId) {
+        throw new Error('Email auth initialization failed')
+      }
