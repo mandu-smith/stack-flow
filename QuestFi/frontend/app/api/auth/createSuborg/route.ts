@@ -22,3 +22,16 @@ export async function POST(request: NextRequest) {
 
     // Create sub-organization for new user
     const subOrgName = `User-${email}-${Date.now()}`
+
+    const createSubOrgParams: any = {
+      subOrganizationName: subOrgName,
+      rootQuorumThreshold: 1,
+      rootUsers: [
+        {
+          userName: email,
+          userEmail: email,
+          apiKeys: [],
+          authenticators: authenticators || [],
+          oauthProviders: oauthProviders || [],
+        },
+      ],
