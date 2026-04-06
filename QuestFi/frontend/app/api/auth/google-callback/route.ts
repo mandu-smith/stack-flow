@@ -57,3 +57,10 @@ export async function GET(request: NextRequest) {
     if (!idToken) {
       throw new Error('No ID token received from Google')
     }
+
+    // Decode JWT to get user email and nonce
+    const payload = JSON.parse(
+      Buffer.from(idToken.split('.')[1], 'base64').toString()
+    )
+    const userEmail = payload.email
+    const nonceInToken = payload.nonce
