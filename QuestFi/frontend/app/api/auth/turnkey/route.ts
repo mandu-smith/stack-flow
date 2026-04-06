@@ -10,3 +10,8 @@ const getTurnkeyClient = () => {
     defaultOrganizationId: process.env.NEXT_PUBLIC_TURNKEY_ORGANIZATION_ID!,
   })
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json()
+    const { email, type, targetPublicKey, suborgID } = body
