@@ -81,3 +81,6 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)),
       };
+
+    case "DISMISS_TOAST": {
+      const { toastId } = action;
