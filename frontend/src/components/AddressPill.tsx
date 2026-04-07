@@ -11,3 +11,11 @@ interface AddressPillProps {
 export function AddressPill({ address, className = '' }: AddressPillProps) {
   const [copied, setCopied] = useState(false);
   const truncated = `${address.slice(0, 5)}…${address.slice(-4)}`;
+
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
