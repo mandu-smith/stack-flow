@@ -7,3 +7,7 @@ interface AddressPillProps {
   address: string;
   className?: string;
 }
+
+export function AddressPill({ address, className = '' }: AddressPillProps) {
+  const [copied, setCopied] = useState(false);
+  const truncated = `${address.slice(0, 5)}…${address.slice(-4)}`;
