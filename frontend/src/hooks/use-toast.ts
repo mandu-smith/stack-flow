@@ -64,3 +64,6 @@ const addToRemoveQueue = (toastId: string) => {
       toastId: toastId,
     });
   }, TOAST_REMOVE_DELAY);
+
+  toastTimeouts.set(toastId, timeout);
+};
