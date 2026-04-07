@@ -19,3 +19,33 @@ export function AddressPill({ address, className = '' }: AddressPillProps) {
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          to={`/profile/${address}`}
+          className={`inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 font-mono text-[length:var(--text-xs)] text-secondary-foreground transition-colors hover:bg-muted ${className}`}
+          aria-label={`View profile for ${address}`}
+        >
+          <span>{truncated}</span>
+          <button
+            onClick={handleCopy}
+            className="hover:text-foreground transition-colors"
+            aria-label={copied ? 'Address copied' : 'Copy address'}
+            type="button"
+          >
+            {copied ? (
+              <Check className="h-3 w-3 text-success" aria-hidden="true" focusable="false" />
+            ) : (
+              <Copy className="h-3 w-3 opacity-50" aria-hidden="true" focusable="false" />
+            )}
+          </button>
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent className="font-mono text-[length:var(--text-xs)]">
+        {address}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
