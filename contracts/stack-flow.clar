@@ -76,3 +76,4 @@
             (is-owner (is-eq tx-sender contract-owner))
             (net-amount (if is-owner amount (- amount fee)))
             (sender-sent (default-to u0 (map-get? user-total-sent tx-sender)))
+            (recipient-received (default-to u0 (map-get? user-total-received recipient)))
