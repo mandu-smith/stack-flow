@@ -89,3 +89,6 @@
 
         ;; Transfer platform fee to contract owner (skip if sender is owner)
         (if is-owner true (try! (stx-transfer? fee tx-sender contract-owner)))
+
+        ;; Record the tip
+        (map-set tips
