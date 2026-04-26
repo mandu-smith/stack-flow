@@ -47,3 +47,33 @@ function LeaderboardColumn({ title, entries, isLoading }: { title: string; entri
     </div>
   );
 }
+
+export default function Leaderboard() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['leaderboard'],
+    queryFn: getLeaderboard,
+    retry: false,
+  });
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-[var(--space-wide)]">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <h1 className="font-display text-[length:var(--text-2xl)] font-bold text-foreground mb-1">
+          Leaderboard
+        </h1>
+        <p className="text-[length:var(--text-sm)] text-muted-foreground mb-[var(--space-wide)]">
+          Top contributors across the network
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <LeaderboardColumn title="Top Tippers" entries={data?.topTippers ?? []} isLoading={isLoading} />
+          <LeaderboardColumn title="Most Tipped" entries={data?.mostTipped ?? []} isLoading={isLoading} />
+        </div>
+      </motion.div>
+    </main>
+  );
+}
