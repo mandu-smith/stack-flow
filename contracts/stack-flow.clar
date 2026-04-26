@@ -96,3 +96,4 @@
             {
                 sender: tx-sender,
                 recipient: recipient,
+                amount: amount,
