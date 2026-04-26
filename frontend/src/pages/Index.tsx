@@ -6,3 +6,10 @@ import { TipComposer } from '@/components/TipComposer';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { getPlatformStats } from '@/lib/contract';
+
+export default function Home() {
+  const { data: stats } = useQuery({
+    queryKey: ['platform-stats'],
+    queryFn: getPlatformStats,
+    retry: false,
+  });
