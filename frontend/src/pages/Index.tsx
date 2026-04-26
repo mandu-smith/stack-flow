@@ -23,9 +23,8 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-[var(--space-wide)]"
-        ></motion.div>
-
-        <div className="flex flex-col gap-[var(--space-base)]">
+        >
+          <div className="flex flex-col gap-[var(--space-base)]">
             <h1 className="font-display text-[length:var(--text-4xl)] font-bold tracking-tight text-foreground">
               Tip anyone on{' '}
               <span className="text-primary">Stacks</span>
@@ -59,4 +58,10 @@ export default function Home() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        ></motion.div>
+        >
+          <TipComposer />
+        </motion.div>
+      </div>
+    </main>
+  );
+}
