@@ -104,3 +104,4 @@
 
         ;; Update user statistics
         (map-set user-total-sent tx-sender (+ sender-sent amount))
+        (map-set user-total-received recipient (+ recipient-received amount))
