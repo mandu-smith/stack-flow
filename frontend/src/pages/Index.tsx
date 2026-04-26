@@ -13,3 +13,14 @@ export default function Home() {
     queryFn: getPlatformStats,
     retry: false,
   });
+
+  return (
+    <main className="mx-auto max-w-5xl px-4 py-[var(--space-section)]">
+      <div className="grid gap-[var(--space-wide)] lg:grid-cols-[1fr_380px] lg:items-start">
+        {/* Left: Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col gap-[var(--space-wide)]"
+        ></motion.div>
