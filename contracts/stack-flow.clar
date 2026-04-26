@@ -39,5 +39,9 @@
     { tip-id: uint }
     {
         sender: principal,
+        recipient: principal,
         amount: uint,
         message: (string-utf8 280),
+        tip-height: uint
+    }
+)
