@@ -7,3 +7,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllTips } from '@/lib/contract';
 import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+
+export default function Feed() {
+  const { data: tips, isLoading } = useQuery<TipEntry[]>({
+    queryKey: ['tips'],
+    queryFn: async () => getAllTips(100),
+    retry: false,
+    refetchInterval: 10000, // Poll every 10s
+  });
