@@ -42,3 +42,14 @@ export default function Home() {
             <StatValue value={stats?.totalVolumeSTX ?? 0} label="Total volume" suffix="STX" decimals={3} />
             <StatValue value={stats?.totalFeesSTX ?? 0} label="Platform fees earned" suffix="STX" decimals={3} />
           </div>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline" className="gap-2">
+              <Link to="/feed">
+                Explore activity
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
