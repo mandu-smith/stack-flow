@@ -154,3 +154,6 @@
 (define-read-only (get-user-received-total (user principal))
     (ok (default-to u0 (map-get? user-total-received user)))
 )
+
+;; Utility function to calculate the fee for a given amount
+(define-read-only (get-fee-for-amount (amount uint))
