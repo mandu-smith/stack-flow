@@ -60,3 +60,12 @@
 (define-private (calculate-fee (amount uint))
     (/ (* amount fee-basis-points) basis-points-divisor)
 )
+
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; send-tip
+;; Allows a user to send a micro-tip to another user with an optional message.
+;; A small platform fee is deducted and sent to the contract owner.
+(define-public (send-tip (recipient principal) (amount uint) (message (string-utf8 280)))
