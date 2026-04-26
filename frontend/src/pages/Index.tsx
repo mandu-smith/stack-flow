@@ -35,3 +35,10 @@ export default function Home() {
               Fast, transparent, powered by the Stacks blockchain.
             </p>
           </div>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-4 sm:gap-8">
+            <StatValue value={stats?.totalTips ?? 0} label="Tips sent" />
+            <StatValue value={stats?.totalVolumeSTX ?? 0} label="Total volume" suffix="STX" decimals={3} />
+            <StatValue value={stats?.totalFeesSTX ?? 0} label="Platform fees earned" suffix="STX" decimals={3} />
+          </div>
