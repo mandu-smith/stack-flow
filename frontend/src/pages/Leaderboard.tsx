@@ -7,3 +7,5 @@ import { AmountDisplay } from '@/components/AmountDisplay';
 import { SkeletonRow } from '@/components/SkeletonRow';
 import { EmptyState } from '@/components/EmptyState';
 import { getLeaderboard } from '@/lib/contract';
+
+const medals = ['🥇', '🥈', '🥉'];
