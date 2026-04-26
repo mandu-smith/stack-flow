@@ -15,3 +15,13 @@ export default function Feed() {
     retry: false,
     refetchInterval: 10000, // Poll every 10s
   });
+
+  // Virtualizer setup
+  const parentRef = useRef<HTMLDivElement>(null);
+  const rowHeight = 64; // px, adjust to match TipRow height
+  const virtualizer = useVirtualizer({
+    count: tips?.length || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => rowHeight,
+    overscan: 6,
+  });
