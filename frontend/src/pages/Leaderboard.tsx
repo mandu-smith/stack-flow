@@ -20,3 +20,30 @@ function RankBadge({ rank }: { rank: number }) {
     </span>
   );
 }
+
+function LeaderboardColumn({ title, entries, isLoading }: { title: string; entries: LeaderboardEntry[]; isLoading: boolean }) {
+  return (
+    <div className="rounded-lg bg-card shadow-base overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50">
+        <Trophy className="h-4 w-4 text-primary" />
+        <h2 className="font-display text-[length:var(--text-base)] font-semibold text-foreground">{title}</h2>
+      </div>
+      {isLoading ? (
+        Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+      ) : entries.length === 0 ? (
+        <EmptyState title="No ranking data yet" description="Leaderboard will populate when tips are indexed." />
+      ) : (
+        entries.map((entry) => (
+          <div key={entry.address} className="flex items-center gap-3 px-4 py-3 border-b border-border/30 last:border-0">
+            <RankBadge rank={entry.rank} />
+            <AddressPill address={entry.address} />
+            <span className="ml-auto text-[length:var(--text-xs)] text-muted-foreground tabular-nums">
+              {entry.tipCount} tip{entry.tipCount !== 1 ? 's' : ''}
+            </span>
+            <AmountDisplay amountSTX={entry.totalSTX} className="text-[length:var(--text-sm)]" />
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
