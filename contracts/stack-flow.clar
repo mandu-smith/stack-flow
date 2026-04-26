@@ -130,3 +130,4 @@
 (define-read-only (get-user-stats (user principal))
     {
         tips-sent: (default-to u0 (map-get? user-tip-count user)),
+        tips-received: (default-to u0 (map-get? user-received-count user)),
