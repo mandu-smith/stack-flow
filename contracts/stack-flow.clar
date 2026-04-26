@@ -23,3 +23,4 @@
 ;; Fee configuration
 ;; 0.5% fee = 50 basis points
 (define-constant fee-basis-points u50)
+(define-constant basis-points-divisor u10000)
