@@ -13,3 +13,7 @@ const NotFound = () => {
         </a>
       </div>
     </div>
+  );
+};
+
+export default NotFound;
