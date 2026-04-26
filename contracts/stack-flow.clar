@@ -138,3 +138,5 @@
 
 ;; Returns overall StackFlow platform statistics
 (define-read-only (get-platform-stats)
+    {
+        total-tips: (var-get total-tips-sent),
