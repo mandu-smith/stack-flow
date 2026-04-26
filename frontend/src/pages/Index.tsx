@@ -24,3 +24,14 @@ export default function Home() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-[var(--space-wide)]"
         ></motion.div>
+
+        <div className="flex flex-col gap-[var(--space-base)]">
+            <h1 className="font-display text-[length:var(--text-4xl)] font-bold tracking-tight text-foreground">
+              Tip anyone on{' '}
+              <span className="text-primary">Stacks</span>
+            </h1>
+            <p className="max-w-lg text-[length:var(--text-lg)] text-muted-foreground leading-relaxed">
+              Send micro-tips to builders, creators, and community members. 
+              Fast, transparent, powered by the Stacks blockchain.
+            </p>
+          </div>
