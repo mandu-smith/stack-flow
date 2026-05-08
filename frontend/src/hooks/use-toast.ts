@@ -37,3 +37,9 @@ type Action =
       type: ActionType["UPDATE_TOAST"];
       toast: Partial<ToasterToast>;
     }
+
+     {
+      type: ActionType["DISMISS_TOAST"];
+      toastId?: ToasterToast["id"];
+    }
+  | {
