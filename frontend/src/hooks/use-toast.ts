@@ -50,3 +50,7 @@ type Action =
       type: ActionType["REMOVE_TOAST"];
       toastId?: ToasterToast["id"];
     };
+
+    interface State {
+  toasts: ToasterToast[];
+}
