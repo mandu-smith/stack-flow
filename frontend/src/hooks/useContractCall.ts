@@ -28,3 +28,11 @@ export const useContractCall = (callFunction: ContractFunction) => {
       }));
       return null;
     }
+
+    try {
+      setState({
+        loading: true,
+        error: null,
+        txId: null,
+        success: false,
+      });
