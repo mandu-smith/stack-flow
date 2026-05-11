@@ -126,3 +126,10 @@ function asNumber(value: unknown): number {
   }
   return Number(value ?? 0);
 }
+
+function asString(value: unknown): string {
+  if (value && typeof value === 'object' && 'value' in value) {
+    return String((value as { value: unknown }).value ?? '');
+  }
+  return String(value ?? '');
+}
