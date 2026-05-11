@@ -36,3 +36,5 @@ export const useContractCall = (callFunction: ContractFunction) => {
         txId: null,
         success: false,
       });
+
+      const result = await callFunction(...args);
