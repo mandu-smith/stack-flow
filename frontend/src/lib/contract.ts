@@ -154,3 +154,9 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
         return tupleFields;
       }
     }
+
+    // Handles flattened optional shape: { type: 'some', value: { ...fields } }
+    if ('sender' in wrappedObj && 'recipient' in wrappedObj) {
+      return wrappedObj;
+    }
+  }
