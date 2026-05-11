@@ -160,3 +160,6 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
       return wrappedObj;
     }
   }
+
+  return null;
+}
