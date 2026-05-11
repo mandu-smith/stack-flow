@@ -22,3 +22,8 @@ type PlatformStats = {
   totalVolumeSTX: number;
   totalFeesSTX: number;
 };
+
+type CacheEntry<T> = {
+  value: T;
+  expiresAt: number;
+};
