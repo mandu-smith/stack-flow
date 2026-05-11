@@ -7,3 +7,15 @@ interface UseContractCallState {
 }
 
 type ContractFunction = (...args: any[]) => Promise<any>;
+
+/**
+ * Hook for managing contract call state and execution
+ */
+export const useContractCall = (callFunction: ContractFunction) => {
+  const { isConnected } = useWallet();
+  const [state, setState] = useState<UseContractCallState>({
+    loading: false,
+    error: null,
+    txId: null,
+    success: false,
+  });
