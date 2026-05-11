@@ -14,3 +14,11 @@ type TransactionResult = {
   txid?: string;
   cancel?: () => void;
 };
+
+type PlatformStats = {
+  totalTips: number;
+  totalVolumeMicro: number;
+  totalFeesMicro: number;
+  totalVolumeSTX: number;
+  totalFeesSTX: number;
+};
