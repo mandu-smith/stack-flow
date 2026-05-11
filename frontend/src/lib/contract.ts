@@ -65,3 +65,6 @@ function isRateLimitedError(error: unknown): boolean {
   const message = toErrorMessage(error);
   return message.includes('429') || /too many requests/i.test(message) || /rate limit/i.test(message);
 }
+
+function parseRetryAfterMs(error: unknown): number | null {
+  const message = toErrorMessage(error);
