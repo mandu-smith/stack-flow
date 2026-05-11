@@ -119,3 +119,10 @@ async function callReadOnlyWithRetry(
 
   throw lastError;
 }
+
+function asNumber(value: unknown): number {
+  if (value && typeof value === 'object' && 'value' in value) {
+    return Number((value as { value: unknown }).value ?? 0);
+  }
+  return Number(value ?? 0);
+}
