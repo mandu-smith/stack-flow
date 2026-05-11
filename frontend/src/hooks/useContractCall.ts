@@ -38,3 +38,13 @@ export const useContractCall = (callFunction: ContractFunction) => {
       });
 
       const result = await callFunction(...args);
+
+      if (result?.txid) {
+        setState({
+          loading: false,
+          error: null,
+          txId: result.txid,
+          success: true,
+        });
+        return result;
+      }
