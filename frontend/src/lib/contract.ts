@@ -47,3 +47,7 @@ export function clearContractCaches() {
   tipByIdCache.clear();
   platformStatsCache = null;
 }
+
+function now(): number {
+  return Date.now();
+}
