@@ -19,3 +19,12 @@ export const useContractCall = (callFunction: ContractFunction) => {
     txId: null,
     success: false,
   });
+
+  const execute = async (...args: any[]) => {
+    if (!isConnected) {
+      setState(prev => ({
+        ...prev,
+        error: 'Wallet not connected',
+      }));
+      return null;
+    }
