@@ -136,3 +136,5 @@ function asString(value: unknown): string {
 
 function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object') return null;
+
+  const root = value as Record<string, unknown>;
