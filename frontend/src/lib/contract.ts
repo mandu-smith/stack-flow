@@ -97,3 +97,8 @@ function getCached<T>(entry: CacheEntry<T> | null): T | null {
   if (entry.expiresAt <= now()) return null;
   return entry.value;
 }
+
+async function callReadOnlyWithRetry(
+  args: Parameters<typeof fetchCallReadOnlyFunction>[0]
+) {
+  let lastError: unknown = null;
