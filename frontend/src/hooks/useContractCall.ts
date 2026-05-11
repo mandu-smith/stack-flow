@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useWallet } from '@/contexts/WalletContext';
+
 interface UseContractCallState {
   loading: boolean;
   error: string | null;
@@ -38,7 +40,7 @@ export const useContractCall = (callFunction: ContractFunction) => {
       });
 
       const result = await callFunction(...args);
-
+      
       if (result?.txid) {
         setState({
           loading: false,
@@ -68,3 +70,6 @@ export const useContractCall = (callFunction: ContractFunction) => {
       success: false,
     });
   };
+
+  return { ...state, execute, reset };
+};
