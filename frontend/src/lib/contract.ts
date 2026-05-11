@@ -9,3 +9,8 @@ import {
   stacksApiBaseUrl,
 } from './stacks-config';
 import type { LeaderboardEntry, TipEntry } from './types';
+
+type TransactionResult = {
+  txid?: string;
+  cancel?: () => void;
+};
