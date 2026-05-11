@@ -84,3 +84,7 @@ function parseRetryAfterMs(error: unknown): number | null {
 function getBackoffMs(attempt: number, error: unknown): number {
   const fromProvider = parseRetryAfterMs(error);
   const jitter = Math.floor(Math.random() * 400);
+
+  if (fromProvider !== null) {
+    return fromProvider + jitter;
+  }
