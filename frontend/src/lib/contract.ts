@@ -112,3 +112,7 @@ async function callReadOnlyWithRetry(
       if (!isRateLimitedError(error) || attempt === READ_ONLY_MAX_RETRIES) {
         throw error;
       }
+
+      await sleep(getBackoffMs(attempt, error));
+    }
+  }
