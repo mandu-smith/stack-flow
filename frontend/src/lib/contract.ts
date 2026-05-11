@@ -27,3 +27,16 @@ type CacheEntry<T> = {
   value: T;
   expiresAt: number;
 };
+
+const TIP_FEE_RATE = 0.005;
+const READ_ONLY_MAX_RETRIES = 5;
+const BASE_BACKOFF_MS = 1_000;
+const PLATFORM_STATS_TTL_MS = 60_000;
+const TIP_BY_ID_TTL_MS = 120_000;
+const ALL_TIPS_TTL_MS = 60_000;
+const blockTimestampCache = new Map<number, Date>();
+const tipByIdCache = new Map<number, CacheEntry<TipEntry | null>>();
+const allTipsCache = new Map<number, CacheEntry<TipEntry[]>>();
+const allTipsInFlight = new Map<number, Promise<TipEntry[]>>();
+let platformStatsCache: CacheEntry<PlatformStats> | null = null;
+let platformStatsInFlight: Promise<PlatformStats> | null = null;
