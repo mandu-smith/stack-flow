@@ -88,3 +88,6 @@ function getBackoffMs(attempt: number, error: unknown): number {
   if (fromProvider !== null) {
     return fromProvider + jitter;
   }
+
+  return BASE_BACKOFF_MS * Math.pow(2, attempt) + jitter;
+}
