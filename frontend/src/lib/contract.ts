@@ -77,3 +77,6 @@ function parseRetryAfterMs(error: unknown): number | null {
       return seconds * 1_000;
     }
   }
+
+  return null;
+}
