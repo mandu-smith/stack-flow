@@ -116,3 +116,6 @@ async function callReadOnlyWithRetry(
       await sleep(getBackoffMs(attempt, error));
     }
   }
+
+  throw lastError;
+}
