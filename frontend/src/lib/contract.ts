@@ -108,3 +108,7 @@ async function callReadOnlyWithRetry(
       return await fetchCallReadOnlyFunction(args);
     } catch (error) {
       lastError = error;
+
+      if (!isRateLimitedError(error) || attempt === READ_ONLY_MAX_RETRIES) {
+        throw error;
+      }
