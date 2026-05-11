@@ -91,3 +91,9 @@ function getBackoffMs(attempt: number, error: unknown): number {
 
   return BASE_BACKOFF_MS * Math.pow(2, attempt) + jitter;
 }
+
+function getCached<T>(entry: CacheEntry<T> | null): T | null {
+  if (!entry) return null;
+  if (entry.expiresAt <= now()) return null;
+  return entry.value;
+}
