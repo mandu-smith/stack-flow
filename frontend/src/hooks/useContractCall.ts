@@ -48,3 +48,14 @@ export const useContractCall = (callFunction: ContractFunction) => {
         });
         return result;
       }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setState({
+        loading: false,
+        error: errorMessage,
+        txId: null,
+        success: false,
+      });
+      throw error;
+    }
+  };
