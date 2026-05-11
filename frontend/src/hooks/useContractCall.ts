@@ -1,2 +1,7 @@
 import { useState } from 'react';
-import { useWallet } from '@/contexts/WalletContext';
+interface UseContractCallState {
+  loading: boolean;
+  error: string | null;
+  txId: string | null;
+  success: boolean;
+}
