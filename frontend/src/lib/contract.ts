@@ -146,3 +146,11 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
   const wrappedValue = root.value;
   if (wrappedValue && typeof wrappedValue === 'object') {
     const wrappedObj = wrappedValue as Record<string, unknown>;
+
+    // Handles tuple wrapper: { type: 'tuple', value: { ...fields } }
+    if ('value' in wrappedObj && wrappedObj.value && typeof wrappedObj.value === 'object') {
+      const tupleFields = wrappedObj.value as Record<string, unknown>;
+      if ('sender' in tupleFields && 'recipient' in tupleFields) {
+        return tupleFields;
+      }
+    }
