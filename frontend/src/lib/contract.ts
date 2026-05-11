@@ -68,3 +68,12 @@ function isRateLimitedError(error: unknown): boolean {
 
 function parseRetryAfterMs(error: unknown): number | null {
   const message = toErrorMessage(error);
+
+  // Hiro responses often contain: "Please try again in 23 seconds"
+  const secondsMatch = message.match(/try again in\s+(\d+)\s+seconds?/i);
+  if (secondsMatch) {
+    const seconds = Number(secondsMatch[1]);
+    if (Number.isFinite(seconds) && seconds > 0) {
+      return seconds * 1_000;
+    }
+  }
