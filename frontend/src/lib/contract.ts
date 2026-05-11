@@ -133,3 +133,6 @@ function asString(value: unknown): string {
   }
   return String(value ?? '');
 }
+
+function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== 'object') return null;
