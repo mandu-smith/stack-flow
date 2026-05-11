@@ -51,3 +51,7 @@ export function clearContractCaches() {
 function now(): number {
   return Date.now();
 }
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
