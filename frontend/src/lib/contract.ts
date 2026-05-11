@@ -60,3 +60,8 @@ function toErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
   return String(error ?? '');
 }
+
+function isRateLimitedError(error: unknown): boolean {
+  const message = toErrorMessage(error);
+  return message.includes('429') || /too many requests/i.test(message) || /rate limit/i.test(message);
+}
