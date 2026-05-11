@@ -59,3 +59,12 @@ export const useContractCall = (callFunction: ContractFunction) => {
       throw error;
     }
   };
+
+  const reset = () => {
+    setState({
+      loading: false,
+      error: null,
+      txId: null,
+      success: false,
+    });
+  };
