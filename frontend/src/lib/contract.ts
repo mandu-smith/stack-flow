@@ -138,3 +138,6 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object') return null;
 
   const root = value as Record<string, unknown>;
+
+  // Handles direct tuple-like objects: { sender: ..., recipient: ... }
+  if ('sender' in root && 'recipient' in root) return root;
