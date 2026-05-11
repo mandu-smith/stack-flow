@@ -141,3 +141,8 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
 
   // Handles direct tuple-like objects: { sender: ..., recipient: ... }
   if ('sender' in root && 'recipient' in root) return root;
+
+  // Handles cvToJSON optional shape: { type: 'optional', value: { type: 'tuple', value: {...} } }
+  const wrappedValue = root.value;
+  if (wrappedValue && typeof wrappedValue === 'object') {
+    const wrappedObj = wrappedValue as Record<string, unknown>;
