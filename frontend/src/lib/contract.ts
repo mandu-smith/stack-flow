@@ -40,3 +40,10 @@ const allTipsCache = new Map<number, CacheEntry<TipEntry[]>>();
 const allTipsInFlight = new Map<number, Promise<TipEntry[]>>();
 let platformStatsCache: CacheEntry<PlatformStats> | null = null;
 let platformStatsInFlight: Promise<PlatformStats> | null = null;
+
+// Clear all relevant caches after a tip is sent
+export function clearContractCaches() {
+  allTipsCache.clear();
+  tipByIdCache.clear();
+  platformStatsCache = null;
+}
