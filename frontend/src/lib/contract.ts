@@ -102,3 +102,9 @@ async function callReadOnlyWithRetry(
   args: Parameters<typeof fetchCallReadOnlyFunction>[0]
 ) {
   let lastError: unknown = null;
+
+  for (let attempt = 0; attempt <= READ_ONLY_MAX_RETRIES; attempt += 1) {
+    try {
+      return await fetchCallReadOnlyFunction(args);
+    } catch (error) {
+      lastError = error;
