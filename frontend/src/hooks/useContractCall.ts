@@ -5,3 +5,5 @@ interface UseContractCallState {
   txId: string | null;
   success: boolean;
 }
+
+type ContractFunction = (...args: any[]) => Promise<any>;
