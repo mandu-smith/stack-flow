@@ -238,3 +238,8 @@ interface HiroTxListResponse {
   total: number;
   results: HiroTxResponse[];
 }
+
+function parseReprUint(repr: string): number {
+  const match = repr.match(/^u(\d+)$/);
+  return match ? Number(match[1]) : 0;
+}
