@@ -356,3 +356,9 @@ function buildLeaderboard(entries: TipEntry[]) {
       }))
       .sort((a, b) => b.totalSTX - a.totalSTX)
       .map((entry, index) => ({ ...entry, rank: index + 1 }));
+
+    return {
+    topTippers: toRanked(sentMap),
+    mostTipped: toRanked(receivedMap),
+  };
+}
