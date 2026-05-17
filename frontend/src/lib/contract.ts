@@ -299,3 +299,8 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
         tx.tx_status !== 'success' ||
         tx.contract_call?.function_name !== 'send-tip'
       ) continue;
+
+      const args = tx.contract_call.function_args;
+      const recipientArg = args.find(a => a.name === 'recipient');
+      const amountArg = args.find(a => a.name === 'amount');
+      const messageArg = args.find(a => a.name === 'message');
