@@ -231,3 +231,10 @@ interface HiroTxResponse {
     repr: string;
   };
 }
+
+interface HiroTxListResponse {
+  limit: number;
+  offset: number;
+  total: number;
+  results: HiroTxResponse[];
+}
