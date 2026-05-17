@@ -214,3 +214,16 @@ interface HiroContractCallArg {
   type: string;
   repr: string;
 }
+
+interface HiroContractCall {
+  tx_id: string;
+  sender_address: string;
+  function_name: string;
+  function_args: HiroContractCallArg[];
+  block_height?: number;
+  block_time?: number;
+  tx_result?: {
+    type: 'success' | 'failure';
+    repr: string;
+  };
+}
