@@ -333,3 +333,9 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
 function buildLeaderboard(entries: TipEntry[]) {
   const sentMap = new Map<string, { total: number; count: number }>();
   const receivedMap = new Map<string, { total: number; count: number }>();
+
+  for (const tip of entries) {
+    const sent = sentMap.get(tip.sender) ?? { total: 0, count: 0 };
+    sent.total += tip.amountSTX;
+    sent.count += 1;
+    sentMap.set(tip.sender, sent);
