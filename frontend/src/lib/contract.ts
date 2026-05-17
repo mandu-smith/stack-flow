@@ -345,3 +345,12 @@ function buildLeaderboard(entries: TipEntry[]) {
     received.count += 1;
     receivedMap.set(tip.recipient, received);
   }
+
+  const toRanked = (map: Map<string, { total: number; count: number }>): LeaderboardEntry[] =>
+    Array.from(map.entries())
+      .map(([address, { total, count }]) => ({
+        address,
+        totalSTX: Number(total.toFixed(6)),
+        tipCount: count,
+        rank: 0,
+      }))
