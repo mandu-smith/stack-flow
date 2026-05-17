@@ -267,3 +267,14 @@ function parseTipIdFromResult(repr: string): number | null {
   const match = repr.match(/\(ok\s+u(\d+)\)/);
   return match ? Number(match[1]) : null;
 }
+
+/**
+ * Fetch tips by querying the Hiro extended API for contract-call
+ * transactions to the stack-flow contract. Returns up to `limit` tips
+ * using 1–3 paginated requests instead of N individual read-only calls.
+ */
+async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
+  const contractPrincipal = `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`;
+  const tips: TipEntry[] = [];
+  let offset = 0;
+  const pageSize = 50;
