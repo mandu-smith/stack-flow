@@ -183,3 +183,11 @@ async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
         burn_block_time_iso?: string;
         burn_block_time?: number;
       };
+
+      const date = data.block_time_iso
+        ? new Date(data.block_time_iso)
+        : data.block_time
+          ? new Date(data.block_time * 1000)
+          : data.burn_block_time_iso
+            ? new Date(data.burn_block_time_iso)
+            : new Date((data.burn_block_time ?? 0) * 1000);
