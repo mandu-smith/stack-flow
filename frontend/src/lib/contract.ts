@@ -326,3 +326,6 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
       tips.push(tip);
       if (tips.length >= limit) break;
     }
+
+    return tips.sort((a, b) => Number(b.id) - Number(a.id));
+}
