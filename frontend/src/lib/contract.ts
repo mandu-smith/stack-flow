@@ -317,3 +317,8 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
         status: 'confirmed',
         blockHeight: tx.block_height,
       };
+
+      // Seed the per-tip cache so getTipById doesn't need a contract call
+      if (tipId !== null) {
+        tipByIdCache.set(tipId, { value: tip, expiresAt: now() + TIP_BY_ID_TTL_MS });
+      }
