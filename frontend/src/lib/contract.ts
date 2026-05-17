@@ -191,3 +191,10 @@ async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
           : data.burn_block_time_iso
             ? new Date(data.burn_block_time_iso)
             : new Date((data.burn_block_time ?? 0) * 1000);
+
+      blockTimestampCache.set(blockHeight, date);
+      return date;
+    } catch {
+      if (attempt < 2) await sleep(getBackoffMs(attempt, null));
+    }
+  }
