@@ -290,3 +290,5 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
     if (!response.ok) {
       throw new Error(`Hiro API error: ${response.status}`);
     }
+
+    const data: HiroTxListResponse = await response.json();
