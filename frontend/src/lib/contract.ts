@@ -292,3 +292,10 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
     }
 
     const data: HiroTxListResponse = await response.json();
+
+    for (const tx of data.results) {
+      if (
+        tx.tx_type !== 'contract_call' ||
+        tx.tx_status !== 'success' ||
+        tx.contract_call?.function_name !== 'send-tip'
+      ) continue;
