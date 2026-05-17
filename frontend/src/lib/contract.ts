@@ -198,3 +198,5 @@ async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
       if (attempt < 2) await sleep(getBackoffMs(attempt, null));
     }
   }
+  return new Date();
+}
