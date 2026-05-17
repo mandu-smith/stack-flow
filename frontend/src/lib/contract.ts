@@ -282,3 +282,8 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
   while (tips.length < limit) {
     const url = `${stacksApiBaseUrl}/extended/v1/address/${contractPrincipal}/transactions?limit=${pageSize}&offset=${offset}`;
     const response = await fetch(url);
+
+    if (response.status === 429) {
+      await sleep(2_000);
+      continue; // retry same page
+    }
