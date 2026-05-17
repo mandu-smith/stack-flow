@@ -339,3 +339,9 @@ function buildLeaderboard(entries: TipEntry[]) {
     sent.total += tip.amountSTX;
     sent.count += 1;
     sentMap.set(tip.sender, sent);
+
+    const received = receivedMap.get(tip.recipient) ?? { total: 0, count: 0 };
+    received.total += tip.amountSTX;
+    received.count += 1;
+    receivedMap.set(tip.recipient, received);
+  }
