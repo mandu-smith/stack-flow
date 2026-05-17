@@ -215,15 +215,19 @@ interface HiroContractCallArg {
   repr: string;
 }
 
-interface HiroContractCall {
+interface HiroTxResponse {
   tx_id: string;
+  tx_status: string;
+  tx_type: string;
+  block_height: number;
+  block_time: number;
   sender_address: string;
-  function_name: string;
-  function_args: HiroContractCallArg[];
-  block_height?: number;
-  block_time?: number;
+  contract_call?: {
+    contract_id: string;
+    function_name: string;
+    function_args: HiroContractCallArg[];
+  };
   tx_result?: {
-    type: 'success' | 'failure';
     repr: string;
   };
 }
