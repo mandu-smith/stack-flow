@@ -243,3 +243,7 @@ function parseReprUint(repr: string): number {
   const match = repr.match(/^u(\d+)$/);
   return match ? Number(match[1]) : 0;
 }
+
+function parseReprPrincipal(repr: string): string {
+  return repr.replace(/^'/, '');
+}
