@@ -200,3 +200,17 @@ async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
   }
   return new Date();
 }
+
+// ---------------------------------------------------------------------------
+// Hiro Extended API — batch-fetch tips via transaction listing
+// ---------------------------------------------------------------------------
+// Instead of calling get-tip N times + fetchBlockTimestamp N times,
+// we fetch contract transactions in one paginated API call. Each tx
+// already contains sender_address, function_args, block_height,
+// block_time, and tx_result — everything we need.
+
+interface HiroContractCallArg {
+  name: string;
+  type: string;
+  repr: string;
+}
