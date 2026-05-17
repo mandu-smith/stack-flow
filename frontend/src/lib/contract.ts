@@ -278,3 +278,7 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
   const tips: TipEntry[] = [];
   let offset = 0;
   const pageSize = 50;
+
+  while (tips.length < limit) {
+    const url = `${stacksApiBaseUrl}/extended/v1/address/${contractPrincipal}/transactions?limit=${pageSize}&offset=${offset}`;
+    const response = await fetch(url);
