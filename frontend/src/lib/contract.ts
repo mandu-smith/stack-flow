@@ -312,3 +312,8 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
         recipient: recipientArg ? parseReprPrincipal(recipientArg.repr) : '',
         amountSTX,
         fee,
+        message: messageArg ? parseReprString(messageArg.repr) : '',
+        timestamp: new Date(tx.block_time * 1000),
+        status: 'confirmed',
+        blockHeight: tx.block_height,
+      };
