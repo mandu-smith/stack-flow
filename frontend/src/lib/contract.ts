@@ -262,3 +262,8 @@ function parseReprString(repr: string): string {
     return new TextDecoder().decode(new Uint8Array(bytes));
   });
 }
+
+function parseTipIdFromResult(repr: string): number | null {
+  const match = repr.match(/\(ok\s+u(\d+)\)/);
+  return match ? Number(match[1]) : null;
+}
