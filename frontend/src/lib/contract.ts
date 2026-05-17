@@ -329,3 +329,7 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
 
     return tips.sort((a, b) => Number(b.id) - Number(a.id));
 }
+
+function buildLeaderboard(entries: TipEntry[]) {
+  const sentMap = new Map<string, { total: number; count: number }>();
+  const receivedMap = new Map<string, { total: number; count: number }>();
