@@ -304,3 +304,11 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
       const recipientArg = args.find(a => a.name === 'recipient');
       const amountArg = args.find(a => a.name === 'amount');
       const messageArg = args.find(a => a.name === 'message');
+
+      const tip: TipEntry = {
+        id: tipId !== null ? String(tipId) : tx.tx_id.slice(0, 8),
+        txid: tx.tx_id,
+        sender: tx.sender_address,
+        recipient: recipientArg ? parseReprPrincipal(recipientArg.repr) : '',
+        amountSTX,
+        fee,
