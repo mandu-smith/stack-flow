@@ -354,3 +354,5 @@ function buildLeaderboard(entries: TipEntry[]) {
         tipCount: count,
         rank: 0,
       }))
+      .sort((a, b) => b.totalSTX - a.totalSTX)
+      .map((entry, index) => ({ ...entry, rank: index + 1 }));
