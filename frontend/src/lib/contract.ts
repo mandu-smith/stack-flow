@@ -167,3 +167,12 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
 async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
   const cached = blockTimestampCache.get(blockHeight);
   if (cached) return cached;
+
+  for (let attempt = 0; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch(`${stacksApiBaseUrl}/extended/v2/blocks/${blockHeight}`);
+      if (response.status === 429) {
+        await sleep(getBackoffMs(attempt, null));
+        continue;
+      }
+      if (!response.ok) return new Date();
