@@ -322,3 +322,7 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
       if (tipId !== null) {
         tipByIdCache.set(tipId, { value: tip, expiresAt: now() + TIP_BY_ID_TTL_MS });
       }
+
+      tips.push(tip);
+      if (tips.length >= limit) break;
+    }
