@@ -163,3 +163,7 @@ function unwrapOptionalTuple(value: unknown): Record<string, unknown> | null {
 
   return null;
 }
+
+async function fetchBlockTimestamp(blockHeight: number): Promise<Date> {
+  const cached = blockTimestampCache.get(blockHeight);
+  if (cached) return cached;
