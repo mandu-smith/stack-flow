@@ -287,3 +287,6 @@ async function fetchTipsViaAPI(limit: number): Promise<TipEntry[]> {
       await sleep(2_000);
       continue; // retry same page
     }
+    if (!response.ok) {
+      throw new Error(`Hiro API error: ${response.status}`);
+    }
